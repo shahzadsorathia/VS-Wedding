@@ -15,14 +15,14 @@ VS-Wedding/
 ├── .nojekyll               tells GitHub Pages to serve files as they are
 ├── assets/
 │   ├── images/
-│   │   ├── hero/           opening card layers, back to front:
-│   │   │                   sky, mountains-far, mountains-mid, arch,
-│   │   │                   wisteria-a, wisteria-b, couple, foreground
-│   │   └── story/          bench, proposal, winter
+│   │   ├── invitation-card/  opening card layers, back to front:
+│   │   │                     sky, mountains-far, mountains-mid, arch,
+│   │   │                     wisteria-a, wisteria-b, couple, foreground
+│   │   ├── our-story/        bench, proposal, winter
+│   │   └── link-preview.jpg  picture shown when the link is shared
 │   ├── video/              save-the-date.mp4 and its poster.jpg
 │   ├── audio/              song.mp3 (plays after the tassel is pulled)
-│   ├── icons/              browser tab and home-screen icons
-│   └── share/              og-image.jpg, the link-preview picture
+│   └── icons/              browser tab and home-screen icons
 └── apps-script/            copy of the RSVP form and couple's dashboard
     ├── Code.gs             (runs on Google Apps Script, not here)
     ├── Index.html
