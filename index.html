@@ -262,16 +262,36 @@ main, footer { overflow-x: clip; }
 
 /* map + weather */
 .mapwrap { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(18px, 3vw, 32px); margin-top: 28px; align-items: stretch; }
-.map { position: relative; border-radius: 22px; overflow: hidden; background: #FFF8F1; border: 1px solid #EAD3B0; box-shadow: 0 24px 50px -36px rgba(78,26,49,.6); min-width: 0; }
+.map { position: relative; border-radius: 22px; overflow: hidden; background: #F7F0E6; border: 1px solid #EAD3B0; box-shadow: 0 24px 50px -36px rgba(78,26,49,.6); min-width: 0; }
 .map svg { display: block; width: 100%; height: auto; }
-.map .road { fill: none; stroke: #E9CFB4; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-.map .road.major { stroke: #E0BE98; stroke-width: 9; }
-.map .rlabel { font-family: var(--font-ui); font-size: 15px; letter-spacing: .12em; fill: #B79470; }
-.map .area { font-family: var(--font-serif); font-style: italic; font-size: 24px; fill: #B78DA0; }
+.map .st { fill: none; stroke: #EADFD2; stroke-width: 2.2; }
+.map .case { fill: none; stroke: #D9BE9C; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+.map .case.major { stroke-width: 14; }
+.map .case.toll { stroke: #E2C9B6; stroke-width: 9; }
+.map .road { fill: none; stroke: #FFFDF8; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.map .road.major { stroke: #F6DDAE; stroke-width: 9.5; }
+.map .road.toll { stroke: #FBF3EA; stroke-width: 5.5; stroke-dasharray: 14 6; }
+.map .park { fill: #E2EAD3; }
+.map .lake { fill: #CFE2EC; stroke: #B9D3E1; stroke-width: 1.5; }
+.map .river { fill: none; stroke: #BFD8E6; stroke-width: 5; stroke-linecap: round; }
+.map .creek { fill: none; stroke: #CBE0EB; stroke-width: 3; stroke-linecap: round; }
+.map .rwy path { stroke: #CDBFB0; stroke-width: 7; stroke-linecap: round; }
+.map .rwy.small path { stroke-width: 5; }
+.map .sh text { font-family: var(--font-ui); font-weight: 600; }
+.map .dt circle { fill: #fff; stroke: #6E5A4C; stroke-width: 3; }
+.map .city { font-family: var(--font-serif); font-weight: 600; font-size: 24px; fill: #5E4A3E; paint-order: stroke; stroke: #F7F0E6; stroke-width: 5px; }
+.map .town { font-family: var(--font-ui); font-size: 15px; letter-spacing: .22em; text-transform: uppercase; fill: #9C8572; paint-order: stroke; stroke: #F7F0E6; stroke-width: 5px; }
+.map .area { font-family: var(--font-serif); font-style: italic; font-size: 22px; fill: #A889A0; }
+.map .water { font-family: var(--font-serif); font-style: italic; font-size: 16px; fill: #6F98B0; paint-order: stroke; stroke: #F7F0E6; stroke-width: 4px; }
+.map .park-l { font-family: var(--font-serif); font-style: italic; font-size: 16px; fill: #7E9468; }
+.map .compass circle { fill: rgba(255,253,248,.85); stroke: #D9BE9C; stroke-width: 1.5; }
+.map .compass path { fill: #8E2450; }
+.map .compass text, .map .scale text { font-family: var(--font-ui); font-size: 14px; letter-spacing: .12em; fill: #8A7564; }
+.map .scale path { fill: none; stroke: #8A7564; stroke-width: 2; }
 .map .pin { cursor: pointer; outline: none; }
 .map .pin .halo { fill: var(--rose); opacity: 0; transition: opacity .25s, r .25s; }
 .map .pin .dot { stroke: #fff; stroke-width: 4; transition: r .2s; }
-.map .pin text { font-family: var(--font-serif); font-weight: 600; font-size: 22px; fill: var(--ink); paint-order: stroke; stroke: #FFF8F1; stroke-width: 6px; stroke-linejoin: round; }
+.map .pin text { font-family: var(--font-serif); font-weight: 600; font-size: 22px; fill: var(--ink); paint-order: stroke; stroke: #F7F0E6; stroke-width: 7px; stroke-linejoin: round; }
 .map .pin text.short { display: none; }
 .map .pin:hover .dot, .map .pin:focus-visible .dot { r: 15; }
 .map .pin.on .halo { opacity: .18; animation: pulse 2.4s ease-in-out infinite; }
@@ -308,7 +328,7 @@ main, footer { overflow-x: clip; }
 .wx .fine svg { width: 26px; height: 26px; flex: none; color: #3D4F8F; }
 .wx .btn { position: relative; z-index: 1; }
 @media (max-width: 900px) { .mapwrap { grid-template-columns: minmax(0, 1fr); } .wx .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .wx { grid-template-columns: minmax(0, 1fr); } .wx .stats { grid-template-columns: minmax(0, 1fr); } .wx::after { display: none; } .wx .btn { justify-self: start; } .map .pin text { font-size: 38px; } .map .pin text.long, .map .hint, .map .rlabel, .map .area { display: none; } .map .pin text.short { display: block; } .map .pin .dot { r: 15; } }
+@media (max-width: 560px) { .wx { grid-template-columns: minmax(0, 1fr); } .wx .stats { grid-template-columns: minmax(0, 1fr); } .wx::after { display: none; } .wx .btn { justify-self: start; } .map .pin text { font-size: 38px; } .map .pin text.long, .map .minor, .map .st, .map .scale { display: none; } .map .sh { transform: scale(1.5); } .map .city { font-size: 40px; stroke-width: 8px; } .map .town { font-size: 28px; letter-spacing: .14em; stroke-width: 8px; } .map .area { font-size: 36px; } .map .water { font-size: 28px; stroke-width: 7px; } .map .compass { transform: translate(945px, 70px) scale(1.4); } .map .hint { font-size: .62rem; top: 10px; left: 12px; } .map .pin text.short { display: block; } .map .pin .dot { r: 15; } }
 
 /* rsvp + close */
 .rsvp { text-align: center; background: linear-gradient(180deg, var(--blush) 0%, var(--blush-2) 100%); border-top: 1px solid rgba(184,135,59,.2); }
@@ -857,30 +877,83 @@ footer small sup.th { letter-spacing: 0; margin-left: -.5em; margin-right: .35em
       <div class="mapwrap">
         <div class="map">
           <svg viewBox="0 0 1000 700" role="group" aria-label="Map of the Denver area with the airport and both venues">
-            <defs>
-              <linearGradient id="mtn" x1="0" x2="1"><stop offset="0" stop-color="#E7D3E2"/><stop offset="1" stop-color="#E7D3E2" stop-opacity="0"/></linearGradient>
-              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="#F3E6D8" stroke-width="1"/></pattern>
-            </defs>
-            <rect width="1000" height="700" fill="#FFF8F1"/>
-            <rect width="1000" height="700" fill="url(#grid)"/>
-            <path d="M0 700 V120 L40 90 L70 150 L110 110 L150 190 L190 230 L170 330 L210 420 L180 520 L220 620 L200 700 Z" fill="url(#mtn)"/>
-            <path d="M20 180 l30 -40 l30 40 M60 300 l34 -46 l34 46 M30 430 l30 -40 l30 40 M80 580 l30 -40 l30 40" fill="none" stroke="#C9A9BE" stroke-width="2" stroke-linejoin="round"/>
-            <text class="area" x="22" y="660">Foothills</text>
-            <path class="road" d="M462 680 L231 660 L123 500"/>
-            <path class="road" d="M846 100 L769 400 L692 640 L462 680"/>
-            <path class="road" d="M554 550 L631 480 L662 340 L631 260"/>
-            <path class="road major" d="M400 0 L385 300 L400 400 L477 480 L554 560 L585 700"/>
-            <path class="road major" d="M0 320 L385 240 L769 260 L1000 280"/>
-            <path class="road" d="M708 260 L800 160 L892 88"/>
-            <text class="rlabel" x="408" y="40">I-25</text>
-            <text class="rlabel" x="560" y="238">I-70</text>
-            <text class="rlabel" x="806" y="210">PEÑA BLVD</text>
-            <text class="rlabel" x="776" y="470">E-470</text>
-            <text class="rlabel" x="668" y="400">I-225</text>
-            <text class="area" x="300" y="360">Denver</text>
-            <text class="area" x="470" y="660">Centennial</text>
-            <g id="pins"></g>
-          </svg>
+<defs><linearGradient id="mtn" x1="0" x2="1"><stop offset="0" stop-color="#E4D2DE"/><stop offset=".7" stop-color="#EDE0E6" stop-opacity=".6"/><stop offset="1" stop-color="#F6EFE6" stop-opacity="0"/></linearGradient><symbol id="shield" viewBox="0 0 40 40"><path d="M5 4 Q20 0 35 4 Q37 24 20 37 Q3 24 5 4Z" fill="#2F5E9E" stroke="#fff" stroke-width="2.5"/><path d="M5.5 4.5 Q20 1 34.5 4.5 L34 11 H6Z" fill="#B23A48"/></symbol><symbol id="oval" viewBox="0 0 40 40"><rect x="2" y="7" width="36" height="26" rx="13" fill="#fff" stroke="#8A7A6A" stroke-width="2.2"/></symbol></defs>
+<rect width="1000" height="700" fill="#F7F0E6"/>
+<path d="M700 377 Q649 287 620 251 Q591 215 553 189 Q515 164 469 158 Q424 152 379 140 Q333 129 275 123 Q217 116 177 153 Q138 190 139 243 Q141 297 139 337 Q137 377 129 420 Q121 464 140 506 Q160 547 197 579 Q233 611 280 636 Q326 661 379 650 Q431 639 465 601 Q498 564 534 543 Q569 522 620 498 Q670 474 685 425 Q700 377 675 332 L649 287" fill="#F1E6DA"/>
+<path d="M0 0 H120 Q90 120 112 230 Q80 330 100 450 Q70 560 95 700 H0Z" fill="url(#mtn)"/>
+<path d="M18 120 l26 -36 l26 36 M40 250 l30 -42 l30 42 M14 380 l26 -36 l26 36 M44 520 l28 -40 l28 40 M16 640 l24 -32 l24 32" fill="none" stroke="#C7A8BC" stroke-width="2" stroke-linejoin="round"/>
+<path class="park" d="M587 86 Q572 52 558 41 Q543 29 524 30 Q505 30 486 30 Q467 29 448 39 Q430 49 434 67 Q438 86 441 102 Q443 117 456 129 Q468 141 487 150 Q505 160 523 150 Q541 141 550 127 Q559 113 573 100 Q587 86 580 69 L572 52"/>
+<path class="park" d="M566 506 Q554 484 545 476 Q536 468 525 463 Q513 459 499 458 Q484 458 480 472 Q475 485 471 496 Q467 506 467 519 Q468 531 477 541 Q487 550 500 552 Q513 554 524 547 Q534 540 548 536 Q561 533 564 519 Q566 506 560 495 L554 484"/>
+<path class="park" d="M363 274 Q359 267 357 265 Q354 263 351 262 Q348 262 344 262 Q340 261 338 264 Q335 267 336 270 Q336 274 336 277 Q336 280 339 283 Q341 285 344 287 Q348 288 351 286 Q353 283 356 281 Q358 280 361 277 Q363 274 361 270 L359 267"/>
+<path class="park" d="M335 377 Q332 370 330 367 Q327 365 324 363 Q321 362 317 362 Q313 362 312 366 Q311 370 310 374 Q309 377 309 381 Q309 385 312 388 Q314 391 318 392 Q321 392 324 390 Q327 388 330 386 Q334 385 335 381 Q335 377 334 373 L332 370"/>
+<path class="park" d="M816 560 Q807 545 801 539 Q795 534 786 534 Q778 534 769 533 Q760 532 753 537 Q746 543 748 552 Q749 560 750 567 Q750 575 756 581 Q761 586 770 590 Q778 594 786 589 Q793 584 798 579 Q804 573 810 567 Q816 560 812 552 L807 545"/>
+<path class="river" d="M232 700 Q232 592 240 549 Q248 506 260 463 Q272 420 263 382 Q255 345 252 307 Q248 269 265 242 Q281 215 302 188 Q323 162 348 129 Q373 97 397 65 Q422 32 435 16 L447 0"/><path class="creek" d="M497 506 Q455 463 430 436 Q406 409 381 388 Q356 366 339 348 Q323 330 302 310 Q281 291 268 277 L255 263"/>
+<path class="lake" d="M522 493 Q518 482 513 478 Q508 474 503 475 Q497 475 491 474 Q485 474 479 477 Q474 481 475 487 Q476 493 477 498 Q477 504 481 508 Q485 512 491 515 Q497 518 502 514 Q508 511 511 507 Q514 502 518 498 Q522 493 520 488 L518 482"/>
+<path class="lake" d="M813 566 Q809 559 805 557 Q802 554 799 553 Q795 552 790 552 Q785 551 783 555 Q781 559 781 563 Q780 566 780 570 Q780 574 783 577 Q786 580 790 581 Q795 583 798 580 Q801 577 806 576 Q810 574 811 570 Q813 566 811 563 L809 559"/>
+<path class="lake" d="M180 700 Q174 690 169 686 Q165 683 159 680 Q152 678 145 678 Q137 679 135 685 Q133 691 130 695 Q127 700 127 706 Q128 711 133 716 Q138 720 145 720 Q152 721 158 718 Q164 716 171 714 Q179 712 179 706 Q180 700 177 695 L174 690"/>
+<path class="lake" d="M196 271 Q195 268 193 267 Q192 266 190 266 Q189 266 187 266 Q186 266 184 267 Q182 268 182 269 Q183 271 183 273 Q183 274 184 276 Q186 277 187 278 Q189 279 190 278 Q192 277 193 276 Q193 274 195 273 Q196 271 195 270 L195 268"/>
+<path class="lake" d="M193 515 Q191 509 189 508 Q187 506 185 506 Q182 505 179 505 Q176 504 175 507 Q173 509 173 512 Q174 515 174 517 Q174 520 175 522 Q177 524 180 526 Q182 527 184 525 Q186 523 188 521 Q190 520 192 517 Q193 515 192 512 L191 509"/>
+<path class="st" d="M0 291 L1000 291"/>
+<path class="st" d="M0 353 L844 353"/>
+<path class="st" d="M99 424 L762 424"/>
+<path class="st" d="M66 541 L679 541"/>
+<path class="st" d="M182 605 L728 605"/>
+<path class="st" d="M265 635 L662 635"/>
+<path class="st" d="M0 162 L894 162"/>
+<path class="st" d="M363 0 L363 549"/>
+<path class="st" d="M425 0 L425 635"/>
+<path class="st" d="M487 0 L487 678"/>
+<path class="st" d="M613 162 L613 678"/>
+<path class="st" d="M224 0 L224 592"/>
+<path class="st" d="M131 0 L131 678"/>
+<path class="st" d="M286 54 L286 700"/>
+<g class="rwy"><path d="M824 21 L894 21"/><path d="M829 57 L894 57"/><path d="M817 -5 L817 75"/><path d="M909 -3 L909 75"/></g>
+<g class="rwy small"><path d="M493 645 L537 669 M507 635 L521 677"/></g>
+<path class="case major" d="M286 0 Q281 162 269 188 Q257 215 248 237 Q240 258 243 280 Q245 302 263 334 Q281 366 302 382 Q323 398 344 409 Q364 420 385 436 Q406 452 418 474 Q430 495 436 517 Q442 538 452 565 Q462 592 468 619 Q474 646 477 673 L480 700"/>
+<path class="case major" d="M0 280 Q99 237 132 218 Q166 198 215 199 Q265 200 315 207 Q364 213 414 213 Q464 213 530 220 Q596 226 646 235 Q695 243 762 262 Q828 280 914 296 L1000 312"/>
+<path class="case hw" d="M427 510 Q488 480 511 463 Q533 446 543 417 Q553 388 556 363 Q560 338 551 312 Q543 286 526 262 Q510 237 505 225 L500 213"/>
+<path class="case hw" d="M215 200 Q281 162 315 135 Q348 108 381 81 Q414 54 455 27 L497 0"/>
+<path class="case hw" d="M472 668 Q381 668 339 668 Q298 668 257 657 Q215 646 174 635 Q132 625 99 587 Q66 549 33 506 L0 463"/>
+<path class="case toll" d="M472 668 Q563 663 600 655 Q637 646 666 619 Q695 592 708 549 Q720 506 724 452 Q728 398 728 345 Q728 291 720 237 Q712 183 704 140 Q695 97 691 48 L687 0"/>
+<path class="case hw" d="M609 226 Q632 183 654 156 Q675 129 706 104 Q737 80 762 68 L788 56"/>
+<path class="case hw" d="M0 323 Q132 323 182 323 Q232 323 247 312 L262 302"/>
+<path class="case hw" d="M0 478 Q166 478 224 478 Q281 478 323 481 Q364 485 389 492 L414 500"/>
+<path class="case hw" d="M397 366 Q480 442 509 479 Q538 517 575 565 Q613 614 637 657 L662 700"/>
+<path class="road major" d="M286 0 Q281 162 269 188 Q257 215 248 237 Q240 258 243 280 Q245 302 263 334 Q281 366 302 382 Q323 398 344 409 Q364 420 385 436 Q406 452 418 474 Q430 495 436 517 Q442 538 452 565 Q462 592 468 619 Q474 646 477 673 L480 700"/>
+<path class="road major" d="M0 280 Q99 237 132 218 Q166 198 215 199 Q265 200 315 207 Q364 213 414 213 Q464 213 530 220 Q596 226 646 235 Q695 243 762 262 Q828 280 914 296 L1000 312"/>
+<path class="road hw" d="M427 510 Q488 480 511 463 Q533 446 543 417 Q553 388 556 363 Q560 338 551 312 Q543 286 526 262 Q510 237 505 225 L500 213"/>
+<path class="road hw" d="M215 200 Q281 162 315 135 Q348 108 381 81 Q414 54 455 27 L497 0"/>
+<path class="road hw" d="M472 668 Q381 668 339 668 Q298 668 257 657 Q215 646 174 635 Q132 625 99 587 Q66 549 33 506 L0 463"/>
+<path class="road toll" d="M472 668 Q563 663 600 655 Q637 646 666 619 Q695 592 708 549 Q720 506 724 452 Q728 398 728 345 Q728 291 720 237 Q712 183 704 140 Q695 97 691 48 L687 0"/>
+<path class="road hw" d="M609 226 Q632 183 654 156 Q675 129 706 104 Q737 80 762 68 L788 56"/>
+<path class="road hw" d="M0 323 Q132 323 182 323 Q232 323 247 312 L262 302"/>
+<path class="road hw" d="M0 478 Q166 478 224 478 Q281 478 323 481 Q364 485 389 492 L414 500"/>
+<path class="road hw" d="M397 366 Q480 442 509 479 Q538 517 575 565 Q613 614 637 657 L662 700"/>
+<g transform="translate(283 86)"><g class="sh"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#fff">25</text></g></g>
+<g transform="translate(321 398)"><g class="sh"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#fff">25</text></g></g>
+<g transform="translate(91 209)"><g class="sh"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#fff">70</text></g></g>
+<g transform="translate(662 230)"><g class="sh"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#fff">70</text></g></g>
+<g transform="translate(556 377)"><g class="sh"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="13" fill="#fff">225</text></g></g>
+<g transform="translate(389 82)"><g class="sh minor"><use href="#shield" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="16" fill="#fff">76</text></g></g>
+<g transform="translate(215 640)"><g class="sh minor"><use href="#oval" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="13" fill="#5A4A3A">470</text></g></g>
+<g transform="translate(728 398)"><g class="sh"><use href="#oval" x="-20" y="-20" width="40" height="40"/><text x="0" y="5" text-anchor="middle" font-size="13" fill="#5A4A3A">470</text></g></g>
+<g class="dt"><circle cx="281" cy="292" r="7"/></g>
+<text class="city" x="295" y="300">Downtown Denver</text>
+<text class="town" x="629" y="351" text-anchor="middle">Aurora</text>
+<text class="town" x="596" y="683" text-anchor="middle">Centennial</text>
+<text class="town minor" x="190" y="472" text-anchor="middle">Englewood</text>
+<text class="town minor" x="91" y="366" text-anchor="middle">Lakewood</text>
+<text class="town minor" x="356" y="108" text-anchor="end">Commerce City</text>
+<text class="area" x="41" y="549" text-anchor="start">Foothills</text>
+<text class="water" x="497" y="515" text-anchor="middle">Cherry Creek</text>
+<text class="water" x="497" y="545" text-anchor="middle">State Park</text>
+<text class="park-l minor" x="505" y="37" text-anchor="middle">Rocky Mountain</text>
+<text class="park-l minor" x="505" y="67" text-anchor="middle">Arsenal</text>
+<text class="water minor" x="227" y="398" text-anchor="end">South Platte</text>
+<g class="compass" transform="translate(945 70)"><circle r="26"/><path d="M0 -20 L7 4 L0 0 L-7 4Z"/><text y="-30" text-anchor="middle">N</text></g>
+<g class="scale" transform="translate(804 670)"><path d="M0 -6 V0 H156 V-6"/><text x="78" y="-12" text-anchor="middle">5 miles</text></g>
+<g id="pins"></g>
+</svg>
           <span class="hint">Tap a pin</span>
         </div>
         <aside class="spot" id="spot" aria-live="polite"></aside>
@@ -1106,9 +1179,9 @@ function makeDhol() {
 
 (function map() {
   const P = [
-    { id: "venue", chip: "Venue", short: "Franciscan", x: 631, y: 606, c: "#8E2450", tag: "Pithi / Sangeet · Reception", name: "The Franciscan Event Center", addr: "6553 S Revere Pkwy, Centennial, CO 80111", note: "Friday evening and Saturday evening.", drive: "About 30 to 40 minutes from the airport", lx: 22, ly: 8 },
-    { id: "jk", chip: "Nikkah", short: "Jamatkhana", x: 543, y: 612, c: "#8E2450", tag: "Nikkah", name: "Ismaili Jamatkhana – Denver", addr: "8006 E Arapahoe Rd #30, Centennial, CO 80112", note: "Saturday. Time to be announced.", drive: "A short drive from The Franciscan Event Center", lx: -22, ly: 8, anchor: "end" },
-    { id: "den", chip: "Airport", short: "Airport", x: 892, y: 88, c: "#B8873B", tag: "Arrive", name: "Denver International Airport", addr: "8500 Peña Blvd, Denver, CO 80249", note: "Rental cars, taxis and rideshares are all at arrivals.", drive: "About 30 to 40 minutes to the venues", lx: -22, ly: 8, anchor: "end" },
+    { id: "venue", chip: "Venue", short: "Franciscan", x: 530, y: 599, c: "#8E2450", tag: "Pithi / Sangeet · Reception", name: "The Franciscan Event Center", addr: "6553 S Revere Pkwy, Centennial, CO 80111", note: "Friday evening and Saturday evening.", drive: "About 30 to 40 minutes from the airport", lx: 22, ly: 8 },
+    { id: "jk", chip: "Nikkah", short: "Jamatkhana", x: 440, y: 605, c: "#8E2450", tag: "Nikkah", name: "Ismaili Jamatkhana – Denver", addr: "8006 E Arapahoe Rd #30, Centennial, CO 80112", note: "Saturday. Time to be announced.", drive: "A short drive from The Franciscan Event Center", lx: -22, ly: 8, anchor: "end" },
+    { id: "den", chip: "Airport", short: "Airport", x: 805, y: 55, c: "#B8873B", tag: "Arrive", name: "Denver International Airport", addr: "8500 Peña Blvd, Denver, CO 80249", note: "Rental cars, taxis and rideshares are all at arrivals.", drive: "About 30 to 40 minutes to the venues", lx: -22, ly: 8, anchor: "end" },
     // Suggested hotel: add x/y (map position), name, addr, note and drive once booked to show its pin.
     { id: "hotel", chip: "Suggested hotel", short: "Hotel", x: null, y: null, c: "#B8873B", tag: "Where to stay", name: "", addr: "", note: "Our suggested hotel and room block details are coming soon.", drive: "", lx: 22, ly: 8 },
   ];
