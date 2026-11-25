@@ -46,6 +46,7 @@
   --muted: #84586B;
   --gold: #B8873B;
   --gold-soft: #E3C484;
+  --gold-text: #85601F; /* deeper gold for small text, readable on blush */
   --wine: #4A1229;
   --wine-2: #5E1A37;
   --font-script: "Great Vibes", "Snell Roundhand", "Apple Chancery", cursive;
@@ -707,6 +708,9 @@ footer small sup.th { letter-spacing: 0; margin-left: -.5em; margin-right: .35em
 .nav ul a { display: inline-block; padding-block: 10px; margin-block: -10px; }
 @media (max-width: 360px) { .nav ul { gap: 10px; } .nav a { letter-spacing: .08em; font-size: .68rem; } .nav-ctl { gap: 4px; padding-left: 8px; } .nav .mono { width: 32px; height: 32px; } }
 @media (orientation: landscape) and (max-height: 520px) { .hang { zoom: .78; } }
+/* small gold lettering uses the deeper gold so it reads clearly (decorative gold stays as is) */
+.eyebrow, .ch-text .num, .stage .caption .num, .spot .tag, .gate-greet .inv, .seal .cta, .tassel-hint, .hero-text .names .sur { color: var(--gold-text); }
+.wine .eyebrow { color: var(--gold-soft); }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1022,7 +1026,7 @@ const RSVP_URL = "https://script.google.com/macros/s/AKfycbybD2ebZSsQfxxWF7kklOM
 const HOTEL = { name: "", address: "", code: "", deadline: "", url: "" };
 // RSVP deadline as guests should read it, e.g. "1 January 2027". Empty shows "Kindly reply".
 const RSVP_DATE = "15th December 2026";
-// Background music when the doors open. Set to true (and replace media/song.mp3) to turn it on.
+// Background music when the tassel is pulled. The song is assets/audio/song.mp3.
 const MUSIC_ON = true;
 // Contact for guest questions. Empty hides the line.
 const CONTACT = { name: "", phone: "" };
@@ -1059,7 +1063,7 @@ function calUrl(e, day) {
   const p = new URLSearchParams({ action: "TEMPLATE", text: "Virani & Sorathia's wedding · " + (e.name || "Celebration"), dates: `${d}T${s}/${ed}T${en}`, ctz: "America/Denver", location: e.tbd ? "" : [e.venue || VENUE.venue, e.address || VENUE.address].join(", ") });
   return "https://calendar.google.com/calendar/render?" + p.toString();
 }
-/* interactive dhol: tap to play a short dhol beat (synthesised, no audio file) */
+/* interactive dhol: tap to animate the drum (no sound) */
 const DHOL_SVG = `<svg viewBox="0 0 64 56" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
   <path class="strap" d="M14 20 C18 6 46 6 50 20" stroke-dasharray="1.6 2.2"/>
   <g class="body">
@@ -1294,7 +1298,7 @@ const Petals = (function petals() {
   tas.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pull(); } });
   doorsBtn.addEventListener("click", () => { if (H0.classList.contains("pulled")) open(); });
   document.getElementById("doors").addEventListener("click", e => { if (H0.classList.contains("pulled") && !e.target.closest(".tassel")) open(); });
-  function reset() { timers.forEach(clearTimeout); timers = []; scrollTo({ top: 0 }); H0.classList.remove("pulled", "gate-leaving"); tas.style.transform = ""; sc.classList.add("closed"); lock(true); doorsBtn.tabIndex = -1; setTimeout(() => tas.focus({ preventScroll: true }), 50); }
+  function reset() { if (window.stopMusic) window.stopMusic(); timers.forEach(clearTimeout); timers = []; scrollTo({ top: 0 }); H0.classList.remove("pulled", "gate-leaving"); tas.style.transform = ""; sc.classList.add("closed"); lock(true); doorsBtn.tabIndex = -1; setTimeout(() => tas.focus({ preventScroll: true }), 50); }
   document.getElementById("b-replay").addEventListener("click", reset);
   const logo = document.querySelector('.nav a[href="#top"]'); if (logo) logo.addEventListener("click", e => { e.preventDefault(); reset(); });
   const nb = document.getElementById("b-night");
@@ -1345,6 +1349,11 @@ const Petals = (function petals() {
   }
   b.addEventListener("click", () => (a.paused || stopTimer) ? play() : stop());
   window.startMusic = play;
+  /* Only one tab plays: when the song starts here, any other open tab of the site fades its song out. */
+  let bc = null; try { bc = new BroadcastChannel("vs-wedding-music"); bc.onmessage = e => { if (e.data === "playing" && !a.paused && !stopTimer) stop(); }; } catch (e) {}
+  a.addEventListener("play", () => { try { bc && bc.postMessage("playing"); } catch (e) {} });
+  /* Replay starts the opening over: the song fades out and rewinds, then starts fresh on the next tassel pull. */
+  window.stopMusic = () => { if (a.paused && !stopTimer) { a.currentTime = 0; return; } stop(); clearTimeout(stopTimer); stopTimer = setTimeout(() => { a.pause(); a.currentTime = 0; stopTimer = 0; }, FADE_OUT * 1000); };
   document.querySelectorAll("[data-film]").forEach(x => x.addEventListener("click", () => { resume = !a.paused && !stopTimer; if (resume) stop(); }));
   const dlg = document.getElementById("film"); if (dlg) dlg.addEventListener("close", () => { if (resume) play(); resume = false; });
 })();
