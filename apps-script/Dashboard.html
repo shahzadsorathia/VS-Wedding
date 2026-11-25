@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html><head><base target="_top"><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap">
+<style>body{margin:0}[hidden]{display:none!important}
+:root {
+  --blush: #FBF0F3; --ivory: #FFFBF6; --rose: #8E2450; --ink: #4E1A31; --muted: #84586B;
+  --gold: #B8873B; --gold-soft: #E3C484; --line: #EAD3B0; --wine: #4A1229; --wine-2: #5E1A37;
+  --ok: #2F6B4F; --ok-bg: #E4F1EA; --no: #8E2450; --no-bg: #F7E1EA;
+  --font-script: "Great Vibes", "Snell Roundhand", cursive;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-ui: "Jost", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--blush); color: var(--ink); font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+button { font: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.view { padding-block: clamp(28px, 6vw, 56px) 64px; }
+.head { display: grid; justify-items: center; text-align: center; gap: 6px; }
+.mono { width: 64px; height: 64px; color: var(--gold); }
+.mono text { font-family: var(--font-script); }
+.script { font-family: var(--font-script); font-weight: 400; color: var(--rose); line-height: 1.05; }
+.head .script { font-size: clamp(1.9rem, 5.5vw, 2.4rem); }
+.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.head p { margin: 0; color: var(--muted); font-style: italic; }
+
+.card { max-width: 620px; margin: 28px auto 0; background: var(--ivory); border: 1px solid var(--line); border-radius: 24px; padding: clamp(22px, 5vw, 38px); box-shadow: 0 24px 50px -36px rgba(78,26,49,.5); position: relative; }
+.card::after { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(201,161,90,.28); border-radius: 18px; pointer-events: none; }
+.card > * { position: relative; z-index: 1; }
+label.lbl { display: block; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.search { display: flex; gap: 10px; }
+.search input { flex: 1; min-width: 0; width: 100%; font: inherit; font-size: 1.15rem; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
+.search input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,59,.18); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; padding: 13px 24px; border-radius: 999px; border: 1px solid var(--rose); background: var(--rose); color: #fff; cursor: pointer; white-space: nowrap; }
+.btn.busy { opacity: .6; pointer-events: none; }
+.back { background: none; border: 0; color: var(--muted); font-family: var(--font-ui); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; padding: 4px 0; }
+.err { text-align: center; color: var(--no); font-size: .98rem; margin: 10px 0 0; min-height: 1.2em; }
+.remember { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-ui); font-size: .8rem; color: var(--muted); }
+.remember input { accent-color: var(--rose); width: 16px; height: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.yes { background: var(--ok-bg); color: var(--ok); } .chip.no { background: var(--no-bg); color: var(--no); }
+
+.band { background: radial-gradient(90% 90% at 50% 0%, var(--wine-2), var(--wine)); color: #F7E7EC; border-radius: 24px; padding: clamp(20px, 4vw, 30px); margin-top: 28px; }
+.band h2 { margin: 0 0 14px; font-family: var(--font-ui); font-weight: 500; font-size: .74rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold-soft); }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.kpi { background: rgba(255,255,255,.06); border: 1px solid rgba(227,196,132,.35); border-radius: 18px; padding: 16px 18px; min-width: 0; }
+.kpi h3 { margin: 0; font-family: var(--font-script); font-weight: 400; font-size: 1.9rem; color: #FFF4EE; line-height: 1.1; }
+.kpi .big { font-family: var(--font-serif); font-weight: 700; font-size: 2.6rem; color: var(--gold-soft); line-height: 1; margin-top: 8px; font-variant-numeric: tabular-nums lining-nums; }
+.kpi .big small { font-size: .45em; font-weight: 500; color: #E2C4D0; margin-left: 4px; }
+.kpi .ak { display: flex; gap: 14px; margin-top: 8px; font-family: var(--font-ui); font-size: .8rem; color: #E2C4D0; }
+.kpi .ak b { color: #FFF4EE; font-weight: 600; margin-left: 4px; }
+.bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.1); margin: 12px 0 8px; }
+.bar i { display: block; height: 100%; }
+.bar .y { background: #8FD0AE; } .bar .n { background: #E58FB2; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-ui); font-size: .74rem; color: #E2C4D0; }
+.kpi .sides { display: flex; gap: 14px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(227,196,132,.25); font-family: var(--font-ui); font-size: .76rem; color: #E2C4D0; }
+.kpi .sides b { color: #FFF4EE; font-weight: 600; margin-left: 4px; }
+.prog { margin-top: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 14px; font-family: var(--font-ui); font-size: .85rem; color: #E2C4D0; }
+.teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tm { display: grid; gap: 2px; padding: 12px 16px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(227,196,132,.35); min-width: 0; }
+.tm.b { border-left: 4px solid #E8A9C4; } .tm.g { border-left: 4px solid var(--gold-soft); }
+.tm .tl { white-space: nowrap; font-family: var(--font-script); font-size: clamp(1.3rem, 4.6vw, 1.6rem); line-height: 1.1; color: #FFF4EE; }
+.tm .tn { font-family: var(--font-serif); font-weight: 700; font-size: 2.2rem; line-height: 1; color: var(--gold-soft); font-variant-numeric: lining-nums tabular-nums; }
+.tm .tn small { font-size: .45em; font-weight: 500; color: #E2C4D0; margin-left: 5px; }
+.tm .tf { font-family: var(--font-ui); font-size: .76rem; color: #E2C4D0; }
+.split { display: flex; gap: 4px; border-radius: 999px; overflow: hidden; height: 8px; }
+.split i { min-width: 0; }
+.split .b { background: #E8A9C4; } .split .g { background: var(--gold-soft); }
+
+.list { margin-top: 24px; background: var(--ivory); border: 1px solid var(--line); border-radius: 24px; padding: clamp(16px, 3vw, 24px); }
+.list-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.list-top h2 { margin: 0; font-family: var(--font-serif); font-weight: 600; font-size: 1.6rem; color: var(--rose); }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filters button { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .08em; }
+.filters button[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+.find { font: inherit; font-family: var(--font-ui); font-size: .85rem; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; min-width: 0; width: min(260px, 100%); background: #fff; color: var(--ink); }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-family: var(--font-ui); font-size: .86rem; }
+th { text-align: left; font-weight: 500; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 12px 10px; border-bottom: 1px solid #F1E3D2; vertical-align: middle; }
+td.name { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+td .sub { display: block; font-family: var(--font-ui); font-size: .74rem; font-weight: 400; color: var(--muted); }
+td .names { margin-top: 4px; }
+.export { margin-top: 14px; font-size: .95rem; color: var(--muted); font-style: italic; }
+.tchip { display: inline-block; font-family: var(--font-ui); text-transform: uppercase; border-radius: 999px; }
+.tchip.bride { background: #FBE4EE; color: var(--rose); } .tchip.groom { background: #F7EEDB; color: #8A5A1C; }
+.tchip.sm { font-size: .6rem; padding: 2px 8px; vertical-align: middle; letter-spacing: .1em; }
+
+.mono-link { display: inline-block; border-radius: 50%; line-height: 0; transition: transform .2s ease; }
+.mono-link:hover { transform: scale(1.06); }
+@media (max-width: 720px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .search { flex-direction: column; } }
+@media (prefers-reduced-motion: no-preference) { .card, .band, .list { animation: up .5s ease both; } @keyframes up { from { opacity: .3; transform: translateY(10px); } to { opacity: 1; transform: none; } } }
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-mono" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width=".6"/><text x="35" y="61" text-anchor="middle" font-size="32" fill="currentColor">V</text><text x="51" y="58" text-anchor="middle" font-size="17" fill="currentColor">&amp;</text><text x="65" y="64" text-anchor="middle" font-size="32" fill="currentColor">S</text></symbol>
+</defs></svg>
+<main class="wrap" id="lock-view" hidden>
+  <section class="view">
+    <div class="head">
+      <a class="mono-link" href="<?= site ?>" target="_top" aria-label="Back to the wedding website" title="Back to the wedding website"><svg class="mono" aria-hidden="true"><use href="#i-mono"/></svg></a>
+      <span class="eyebrow">For Virani &amp; Sorathia only</span>
+      <span class="script">RSVP dashboard</span>
+    </div>
+    <form class="card" id="pwf" style="max-width:440px">
+      <label class="lbl" for="pw">Password</label>
+      <div class="search"><input id="pw" type="password" autocomplete="current-password" placeholder="Enter your password"><button class="btn" type="submit" id="pwb">Open</button></div>
+      <label class="remember"><input type="checkbox" id="rem" checked> Remember on this device</label>
+      <p class="err" id="pwerr" aria-live="polite"></p>
+      <a class="back" href="<?= url ?>" target="_top" style="display:block;text-align:center;margin-top:6px">← Back to the RSVP form</a>
+    </form>
+  </section>
+</main>
+<main class="wrap" id="main" hidden>
+  <section class="view">
+    <div class="head">
+      <a class="mono-link" href="<?= site ?>" target="_top" aria-label="Back to the wedding website" title="Back to the wedding website"><svg class="mono" aria-hidden="true"><use href="#i-mono"/></svg></a>
+      <span class="eyebrow">For Virani &amp; Sorathia only</span>
+      <span class="script">RSVP dashboard</span>
+      <p><span id="upd">Loading…</span> · <button type="button" class="back" id="refresh" style="font-style:normal">Refresh</button> · <button type="button" class="back" id="lockb" style="font-style:normal">Lock</button></p>
+    </div>
+    <div class="band">
+      <h2>Headcount by event</h2>
+      <div class="kpis" id="kpis"></div>
+      <div class="prog" id="prog"></div>
+    </div>
+    <div class="list">
+      <div class="list-top">
+        <h2>Guest list</h2>
+        <div class="tools">
+          <div class="filters" id="sidef"><button type="button" data-s="all" aria-pressed="true">All</button><button type="button" data-s="bride" aria-pressed="false">Team Bride</button><button type="button" data-s="groom" aria-pressed="false">Team Groom</button></div>
+          <input class="find" id="find" type="search" placeholder="Search a name" aria-label="Search the guest list">
+        </div>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>Family</th><th>Pithi / Sangeet</th><th>Nikkah</th><th>Reception</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+      <p class="export">Everything is also in your Google Sheet (Replies, Guests and Summary tabs), where you can sort, filter and download it.</p>
+    </div>
+  </section>
+</main>
+<script>
+document.querySelectorAll(".mono-link").forEach(l => { if (!l.getAttribute("href")) { l.removeAttribute("href"); l.removeAttribute("title"); l.removeAttribute("aria-label"); } });
+const EVENTS = [ { id: "sangeet", name: "Pithi / Sangeet" }, { id: "nikkah", name: "Nikkah" }, { id: "reception", name: "Reception" } ];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtPhone = d => d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d;
+const fullName = x => `${x.f} ${x.l}`.trim();
+const kidTag = x => x.k ? " (child)" : "";
+const LINK_KEY = <?= JSON.stringify(key) ?>;
+const STORE = "vs-dash-secret";
+let SECRET = LINK_KEY || (() => { try { return localStorage.getItem(STORE) || ""; } catch (e) { return ""; } })();
+let state = [], q = "", side = "all";
+function renderDash() {
+  const people = state.flatMap(h => h.people);
+  $("#kpis").innerHTML = EVENTS.map(e => {
+    const y = people.filter(x => x.a[e.id] === true).length, n = people.filter(x => x.a[e.id] === false).length, t = y + n || 1;
+    const yk = people.filter(x => x.a[e.id] === true && x.k).length;
+    return `<div class="kpi"><h3>${e.name}</h3><div class="big">${y}<small>guests coming</small></div>
+      <div class="ak"><span>Adults <b>${y - yk}</b></span><span>Kids <b>${yk}</b></span></div>
+      <div class="bar" aria-hidden="true"><i class="y" style="width:${(y / t * 100).toFixed(1)}%"></i><i class="n" style="width:${(n / t * 100).toFixed(1)}%"></i></div>
+      <div class="legend"><span>${y} attending</span><span>${n} can't make it</span></div>
+      <div class="sides"><span>Team Bride <b>${state.filter(h => h.side === "bride").flatMap(h => h.people).filter(x => x.a[e.id]).length}</b></span><span>Team Groom <b>${state.filter(h => h.side === "groom").flatMap(h => h.people).filter(x => x.a[e.id]).length}</b></span></div></div>`;
+  }).join("");
+  const sb = state.filter(h => h.side === "bride"), sg = state.filter(h => h.side === "groom");
+  const gb = sb.flatMap(h => h.people).length, gg = sg.flatMap(h => h.people).length;
+  const kb = sb.flatMap(h => h.people).filter(x => x.k).length, kg = sg.flatMap(h => h.people).filter(x => x.k).length;
+  const pl = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+  $("#prog").innerHTML = `<span><b style="color:var(--gold-soft);font-weight:500">${pl(state.length, "family", "families")}</b> replied · <b style="color:var(--gold-soft);font-weight:500">${pl(people.length, "guest", "guests")}</b> listed</span>
+    <div class="teams">
+      <div class="tm b"><span class="tl">Team Bride</span><span class="tn">${gb}<small>${gb === 1 ? "guest" : "guests"}</small></span><span class="tf">${pl(sb.length, "family", "families")} · ${pl(kb, "kid", "kids")}</span></div>
+      <div class="tm g"><span class="tl">Team Groom</span><span class="tn">${gg}<small>${gg === 1 ? "guest" : "guests"}</small></span><span class="tf">${pl(sg.length, "family", "families")} · ${pl(kg, "kid", "kids")}</span></div>
+    </div>
+    ${people.length ? `<span class="split" aria-hidden="true"><i class="b" style="flex:${gb || .001}"></i><i class="g" style="flex:${gg || .001}"></i></span>` : ""}`;
+  const t = q.trim().toLowerCase();
+  const rows = state.filter(h => side === "all" || h.side === side).filter(h => !t || h.family.toLowerCase().includes(t) || h.people.some(x => fullName(x).toLowerCase().includes(t)));
+  $("#rows").innerHTML = rows.map(h => `<tr><td class="name">${esc(h.family)} Family <span class="tchip sm ${h.side}">${h.side === "bride" ? "Bride" : "Groom"}</span><span class="sub">${esc(h.people.map(x => fullName(x) + kidTag(x)).join(", "))}</span><span class="sub">${esc(fmtPhone(h.phone))} · replied ${esc(h.at)}</span></td>
+    ${EVENTS.map(e => { const y = h.people.filter(x => x.a[e.id]); return `<td>${y.length ? `<span class="chip yes">${y.length} of ${h.people.length}</span><span class="sub names">${esc(y.map(x => x.f + kidTag(x)).join(", "))}</span>` : `<span class="chip no">None</span>`}</td>`; }).join("")}
+</tr>`).join("") || `<tr><td colspan="4" style="text-align:center;color:var(--muted);font-family:var(--font-serif);font-style:italic">${state.length ? "No matching names." : "No replies yet."}</td></tr>`;
+}
+let timer = null;
+function showLock(msg) {
+  $("#main").hidden = true; $("#lock-view").hidden = false; clearInterval(timer);
+  $("#pwerr").textContent = msg || ""; setTimeout(() => $("#pw").focus(), 50);
+}
+function load(first) {
+  if (!SECRET) return showLock();
+  $("#upd").textContent = "Refreshing…";
+  google.script.run.withSuccessHandler(d => {
+    if (first) { $("#lock-view").hidden = true; $("#main").hidden = false; clearInterval(timer); timer = setInterval(load, 120000); const pb = $("#pwb"); pb.classList.remove("busy"); pb.textContent = "Open"; $("#pw").value = ""; }
+    state = d.families.sort((a, b) => (b.ts || 0) - (a.ts || 0)); renderDash();
+    $("#upd").textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + (d.open ? " · RSVPs are open" : " · RSVPs are closed");
+  }).withFailureHandler(e => {
+    try { localStorage.removeItem(STORE); } catch (x) {}
+    SECRET = ""; showLock(first && $("#pw").value ? (e.message || "That password isn't right.") : "");
+    const b = $("#pwb"); b.classList.remove("busy"); b.textContent = "Open";
+  }).getDashboard(SECRET);
+}
+$("#pwf").addEventListener("submit", e => {
+  e.preventDefault(); const v = $("#pw").value; if (!v) return;
+  SECRET = v; const b = $("#pwb"); b.classList.add("busy"); b.textContent = "Opening…"; $("#pwerr").textContent = "";
+  try { if ($("#rem").checked) localStorage.setItem(STORE, v); else localStorage.removeItem(STORE); } catch (x) {}
+  load(true);
+});
+$("#lockb").addEventListener("click", () => { try { localStorage.removeItem(STORE); } catch (x) {} SECRET = ""; $("#pw").value = ""; showLock(); });
+$("#find").addEventListener("input", e => { q = e.target.value; renderDash(); });
+$("#sidef").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; side = b.dataset.s; $("#sidef").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); renderDash(); });
+$("#refresh").addEventListener("click", load);
+load(true);
+</script>
+</body></html>
