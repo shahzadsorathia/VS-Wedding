@@ -929,7 +929,7 @@ const HOTEL = { name: "", address: "", code: "", deadline: "", url: "" };
 // RSVP deadline as guests should read it, e.g. "1 January 2027". Empty shows "Kindly reply".
 const RSVP_DATE = "15th December 2026";
 // Background music when the doors open. Set to true (and replace media/song.mp3) to turn it on.
-const MUSIC_ON = false;
+const MUSIC_ON = true;
 // Contact for guest questions. Empty hides the line.
 const CONTACT = { name: "", phone: "" };
 // Public link to the shared wedding calendar (all three events). Leave empty until it exists.
@@ -1185,6 +1185,7 @@ const Petals = (function petals() {
     if (H0.classList.contains("pulled")) return;
     tas.style.transform = "";
     H0.classList.add("pulled"); doorsBtn.tabIndex = 0;
+    if (window.startMusic) window.startMusic(); /* the song starts with the tassel pull */
     setTimeout(() => doorsBtn.focus({ preventScroll: true }), 1600);
   }
   let y0 = null, dy = 0;
@@ -1220,16 +1221,33 @@ const Petals = (function petals() {
   const a = document.getElementById("song"), b = document.getElementById("b-music");
   if (!a || !b) return;
   if (!MUSIC_ON) { b.hidden = true; return; }
-  let fade = null, resume = false;
+  /* The song swells in and out smoothly. Web Audio does the fades because phones (iPhones especially)
+     ignore a page's volume setting; the file itself is already mixed soft. */
+  const FADE_IN = 4, FADE_OUT = 0.8;
+  let ctx = null, gain = null, resume = false, stopTimer = 0;
   function set(on) { b.setAttribute("aria-pressed", on); b.setAttribute("aria-label", on ? "Pause music" : "Play music"); }
-  function play() {
-    clearInterval(fade); a.volume = 0;
-    a.play().then(() => { set(true); fade = setInterval(() => { a.volume = Math.min(.55, a.volume + .03); if (a.volume >= .55) clearInterval(fade); }, 120); }).catch(() => set(false));
+  function graph() {
+    if (ctx) return true;
+    try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+      ctx = new AC(); gain = ctx.createGain(); gain.gain.value = 0; ctx.createMediaElementSource(a).connect(gain).connect(ctx.destination); return true;
+    } catch (e) { ctx = null; return false; }
   }
-  function stop() { clearInterval(fade); a.pause(); set(false); }
-  b.addEventListener("click", () => a.paused ? play() : stop());
+  function ramp(to, secs) { const g = gain.gain, t = ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(to, t + secs); }
+  function play() {
+    clearTimeout(stopTimer);
+    if (!a.paused && !(gain && gain.gain.value < 0.99 && stopTimer)) return; /* already playing: opening the doors doesn't restart it */
+    const smooth = graph(); if (smooth && ctx.state === "suspended") ctx.resume();
+    if (smooth) ramp(1, FADE_IN); else a.volume = 1;
+    a.play().then(() => set(true)).catch(() => set(false));
+  }
+  function stop() {
+    set(false);
+    if (ctx && gain) { ramp(0, FADE_OUT); stopTimer = setTimeout(() => { a.pause(); stopTimer = 0; }, FADE_OUT * 1000); }
+    else a.pause();
+  }
+  b.addEventListener("click", () => (a.paused || stopTimer) ? play() : stop());
   window.startMusic = play;
-  document.querySelectorAll("[data-film]").forEach(x => x.addEventListener("click", () => { resume = !a.paused; if (resume) stop(); }));
+  document.querySelectorAll("[data-film]").forEach(x => x.addEventListener("click", () => { resume = !a.paused && !stopTimer; if (resume) stop(); }));
   const dlg = document.getElementById("film"); if (dlg) dlg.addEventListener("close", () => { if (resume) play(); resume = false; });
 })();
 
