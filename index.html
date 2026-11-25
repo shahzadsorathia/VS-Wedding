@@ -1037,10 +1037,11 @@ const CONTACT = { name: "", phone: "" };
 // Public link to the shared wedding calendar (all three events). Leave empty until it exists.
 const CAL_URL = "";
 // One entry per celebration. Times are 24-hour Denver time ("18:30").
+// "ics" is the Apple Calendar file used on iPhone, iPad and Mac (in assets/calendar). When a time changes, update that file too.
 const EVENTS = [
-  { day: 1, name: "Pithi / Sangeet", icon: "dhol", start: "18:30", end: "00:00", venue: "The Franciscan Event Center", address: "6553 S Revere Pkwy, Centennial, CO 80111" },
-  { day: 2, name: "Nikkah", icon: "nikkah", start: "", end: "", venue: "Ismaili Jamatkhana – Denver", address: "8006 E Arapahoe Rd #30, Centennial, CO 80112" },
-  { day: 2, name: "Reception", icon: "toast", start: "19:00", end: "00:00", venue: "The Franciscan Event Center", address: "6553 S Revere Pkwy, Centennial, CO 80111" },
+  { day: 1, name: "Pithi / Sangeet", icon: "dhol", ics: "assets/calendar/pithi-sangeet.ics", start: "18:30", end: "00:00", venue: "The Franciscan Event Center", address: "6553 S Revere Pkwy, Centennial, CO 80111" },
+  { day: 2, name: "Nikkah", icon: "nikkah", ics: "assets/calendar/nikkah.ics", start: "", end: "", venue: "Ismaili Jamatkhana – Denver", address: "8006 E Arapahoe Rd #30, Centennial, CO 80112" },
+  { day: 2, name: "Reception", icon: "toast", ics: "assets/calendar/reception.ics", start: "19:00", end: "00:00", venue: "The Franciscan Event Center", address: "6553 S Revere Pkwy, Centennial, CO 80111" },
 ];
 /* ----------------------------------- */
 const VENUE = { venue: "The Franciscan Event Center", address: "6553 S Revere Pkwy, Centennial, CO 80111" };
@@ -1140,7 +1141,11 @@ function makeDhol() {
     const mapUrl = e.address ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([e.venue, e.address].join(", ")) : "";
     const where = e.venue ? el("p", { class: "where" }, e.venue, e.address ? el("a", { class: "addr", href: mapUrl, target: "_blank", rel: "noopener", style: "display:block;margin-top:4px" }, e.address) : null) : e.tbd ? el("p", { class: "where tbd" }, "Venue to be announced") : el("p", { class: "where" }, VENUE.venue);
     const links = el("div", { class: "links" });
-    { const a = el("a", { class: "btn", href: calUrl(e, day), target: "_blank", rel: "noopener" }); a.append(svgUse("i-cal"), "Add to calendar"); links.append(a); }
+    { /* One "Add to calendar" button that suits the device: iPhone, iPad and Mac get the calendar file
+         (opens in Apple Calendar); Windows, Android and others go to Google Calendar. */
+      const useFile = e.ics && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+      const a = el("a", Object.assign({ class: "btn", href: useFile ? e.ics : calUrl(e, day) }, useFile ? {} : { target: "_blank", rel: "noopener" }));
+      a.append(svgUse("i-cal"), "Add to calendar"); links.append(a); }
     if (e.address) { const a = el("a", { class: "btn", href: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([e.venue, e.address].join(", ")), target: "_blank", rel: "noopener" }); a.append(svgUse("i-pin"), "Directions"); links.append(a); }
     host.append(el("article", { class: "ev3" },
       el("div", { class: "date" }, el("span", { class: "d" }, day.d, el("sup", { class: "th" }, "th")), el("span", { class: "w" }, el("b", {}, day.w), el("span", {}, "January 2027"))),
