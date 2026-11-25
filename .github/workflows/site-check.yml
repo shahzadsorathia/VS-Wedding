@@ -1,0 +1,74 @@
+# Checks every hour that the wedding website and the RSVP form load.
+# If something is down it opens a GitHub issue (GitHub emails you about it), and closes it when things recover.
+name: Site check
+
+on:
+  schedule:
+    - cron: "23 * * * *"   # every hour, at 23 minutes past
+  workflow_dispatch:         # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: site-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check website and RSVP form
+        id: check
+        shell: bash
+        run: |
+          SITE="https://shahzadsorathia.github.io/VS-Wedding/"
+          RSVP="$(curl -fsSL --retry 3 --retry-delay 20 "$SITE" | grep -o 'const RSVP_URL = "[^"]*"' | cut -d'"' -f2)"
+          problems=""
+          check () {  # name, url, text that must appear (or "" to only need a 200)
+            local name="$1" url="$2" want="$3" ok=""
+            for attempt in 1 2 3; do
+              if [ -z "$want" ]; then   # files: only fetch the first bytes
+                code="$(curl -sSL --max-time 30 -r 0-1023 -o /dev/null -w '%{http_code}' "$url" || true)"
+                if [ "$code" = "200" ] || [ "$code" = "206" ]; then ok=1; break; fi
+              else
+                body="$(curl -sSL --max-time 30 -w '\n%{http_code}' "$url" || true)"
+                code="${body##*$'\n'}"
+                if [ "$code" = "200" ] && grep -q "$want" <<<"$body"; then ok=1; break; fi
+              fi
+              sleep 30
+            done
+            if [ -n "$ok" ]; then echo "OK   $name"; else echo "DOWN $name (last status $code)"; problems="$problems- $name ($url) answered $code"$'\n'; fi
+          }
+          check "Wedding website" "$SITE" "Virani weds Sorathia"
+          check "Link-preview picture" "${SITE}assets/images/link-preview.jpg" ""
+          check "Save-the-date video" "${SITE}assets/video/save-the-date.mp4" ""
+          if [ -z "$RSVP" ]; then problems="$problems- Could not read the RSVP link from the website"$'\n'; else check "RSVP form" "$RSVP" "Virani weds Sorathia"; fi
+          {
+            echo "problems<<EOF"
+            printf '%s' "$problems"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the alert issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PROBLEMS: ${{ steps.check.outputs.problems }}
+        shell: bash
+        run: |
+          open="$(gh issue list --state open --label site-down --json number --jq '.[0].number' 2>/dev/null || true)"
+          if [ -n "$PROBLEMS" ]; then
+            if [ -z "$open" ]; then
+              gh label create site-down --color B60205 --description "The hourly site check failed" 2>/dev/null || true
+              gh issue create --label site-down --assignee shahzadsorathia \
+                --title "Wedding site check failed" \
+                --body "$(printf 'The hourly check could not load:\n\n%s\nChecked at %s UTC. This issue closes itself when everything loads again.' "$PROBLEMS" "$(date -u '+%Y-%m-%d %H:%M')")"
+            fi
+            echo "$PROBLEMS"
+            exit 1
+          elif [ -n "$open" ]; then
+            gh issue close "$open" --comment "Everything loads again ($(date -u '+%Y-%m-%d %H:%M') UTC)."
+          fi
