@@ -34,7 +34,7 @@ button { font: inherit; }
 .mono text { font-family: var(--font-script); }
 .script { font-family: var(--font-script); font-weight: 400; color: var(--rose); line-height: 1.05; }
 .head .script { font-size: clamp(2.8rem, 8vw, 3.8rem); }
-.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #85601F; }
 .head p { margin: 0; color: var(--muted); font-style: italic; }
 .rule { display: flex; align-items: center; gap: 10px; color: var(--gold); margin: 10px 0 4px; }
 .rule::before, .rule::after { content: ""; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, currentColor); }
@@ -61,7 +61,7 @@ label.lbl { display: block; font-family: var(--font-ui); font-size: .74rem; lett
 .empty { margin-top: 16px; color: var(--muted); font-style: italic; }
 
 .hh { text-align: center; }
-.hh .script { font-size: clamp(2.2rem, 7vw, 2.9rem); }
+.hh .script { font-size: clamp(2.2rem, 7vw, 2.9rem); overflow-wrap: anywhere; }
 .welcome { margin: 6px auto 0; max-width: 40ch; color: var(--muted); font-style: italic; }
 .back { background: none; border: 0; color: var(--muted); font-family: var(--font-ui); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; padding: 4px 0; }
 .events { display: grid; gap: 14px; margin-top: 22px; }
@@ -85,7 +85,7 @@ textarea { resize: vertical; min-height: 64px; font-size: 1.05rem; }
 .err { text-align: center; color: var(--no); font-size: .98rem; margin: 10px 0 0; min-height: 1.2em; }
 
 .done { text-align: center; display: grid; justify-items: center; gap: 8px; }
-.done .script { font-size: clamp(2.6rem, 8vw, 3.4rem); }
+.done .script { font-size: clamp(2.6rem, 8vw, 3.4rem); overflow-wrap: anywhere; }
 .summary { width: 100%; display: grid; gap: 8px; margin: 12px 0 6px; text-align: left; }
 .summary div { display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
 .summary b { font-family: var(--font-serif); font-size: 1.15rem; color: var(--ink); }
@@ -131,7 +131,7 @@ tr.new td { background: #FFF6E6; }
 .people { display: grid; gap: 8px; }
 .person { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid #F3E7D8; }
 .person:first-child { border-top: 0; }
-.pname { font-family: var(--font-serif); font-weight: 600; font-size: 1.15rem; color: var(--ink); min-width: 0; }
+.pname { font-family: var(--font-serif); font-weight: 600; font-size: 1.15rem; color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
 .pname em { font-family: var(--font-ui); font-style: normal; font-weight: 400; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); margin-left: 6px; }
 .pick { display: inline-flex; gap: 6px; }
 .pick button { border: 1px solid var(--line); background: var(--ivory); color: var(--ink); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-family: var(--font-ui); font-size: .76rem; letter-spacing: .03em; white-space: nowrap; }
