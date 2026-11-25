@@ -1145,9 +1145,13 @@ function makeDhol() {
 
 (function links() {
   const r = document.getElementById("rsvp-btn"), note = document.getElementById("rsvp-note");
-  if (RSVP_URL) { r.href = RSVP_URL; }
-  /* The header's RSVP link opens the RSVP form directly, in the same tab. */
-  if (RSVP_URL) document.querySelectorAll(".nav a.rsvp-link").forEach(n => { n.href = RSVP_URL; });
+  /* RSVP links open the form in the same tab. Inside a framed copy (the claude.ai backup), the frame blocks
+     leaving the page, so there they open a new tab instead. */
+  const framed = window.top !== window.self;
+  const toForm = n => { n.href = RSVP_URL; if (framed) { n.target = "_blank"; n.rel = "noopener"; } };
+  if (RSVP_URL) { toForm(r); }
+  /* The header's RSVP link opens the RSVP form directly. */
+  if (RSVP_URL) document.querySelectorAll(".nav a.rsvp-link").forEach(toForm);
   else r.addEventListener("click", e => { e.preventDefault(); note.hidden = false; });
   const h = document.getElementById("hotel-btn");
   if (HOTEL.name) {
