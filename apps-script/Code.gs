@@ -191,7 +191,7 @@ function dailySummary() {
   const label = Utilities.formatDate(new Date(), 'America/Denver', 'MMM d');
   const html = mailWrap_(
     '<p style="margin:0 0 10px">' + (todays.length ? todays.length + ' ' + (todays.length === 1 ? 'reply' : 'replies') + ' new or updated today: ' + esc_(todays.join(', ')) + '.' : 'No new or updated replies today.') + '</p>' +
-    '<ul style="margin:0 0 12px;padding-left:18px">' + EVENTS.map(e => '<li>' + e.name + ': <b>' + t.byEvent[e.id] + '</b> coming (' + (t.byEvent[e.id] - t.kidsByEvent[e.id]) + ' adults, ' + kids_(t.kidsByEvent[e.id]) + ')</li>').join('') + '</ul>' +
+    '<ul style="margin:0 0 12px;padding-left:18px">' + EVENTS.map(e => '<li>' + e.name + ': <b>' + t.byEvent[e.id] + '</b> coming (' + adults_(t.byEvent[e.id] - t.kidsByEvent[e.id]) + ', ' + kids_(t.kidsByEvent[e.id]) + ')</li>').join('') + '</ul>' +
     '<p style="margin:0 0 14px;color:#84586B;font-size:13px">So far: ' + t.families + ' ' + (t.families === 1 ? 'family' : 'families') + ' · ' + t.guests + ' ' + (t.guests === 1 ? 'guest' : 'guests') + '</p>');
   MailApp.sendEmail({ to: to.join(','), subject: 'Daily RSVP summary · ' + label, htmlBody: html, name: 'Wedding RSVP' });
 }
@@ -210,6 +210,7 @@ function totals_() {
   return { byEvent: byEvent, kidsByEvent: kidsByEvent, families: families, guests: rows.length };
 }
 function kids_(n) { return n + ' ' + (n === 1 ? 'child' : 'kids'); }
+function adults_(n) { return n + ' ' + (n === 1 ? 'adult' : 'adults'); }
 function mailWrap_(inner) {
   let url = ''; try { url = ScriptApp.getService().getUrl(); } catch (e) {}
   return '<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#4E1A31;line-height:1.5;max-width:520px">' + inner +
