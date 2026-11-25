@@ -2,16 +2,13 @@
 
 The RSVP form, the couple's dashboard and the server code. These files run in Google Apps Script
 (project "Wedding RSVP", bound to the "Wedding RSVPs" Google Sheet), not on GitHub Pages.
+This folder is a copy for safekeeping: editing a file here changes nothing until it is pasted into Apps Script.
 
 | File | What it is |
 | --- | --- |
 | `Code.gs` | Server code: saves replies to the sheet, phone lookup, dashboard data, alert and daily emails |
 | `Index.html` | The guest RSVP form |
 | `Dashboard.html` | The couple's password-protected dashboard |
-
-## Updating
-1. Paste each changed file over the matching file in Apps Script and save.
-2. Deploy → Manage deployments → pencil → Version: New version → Deploy (never "New deployment").
 
 ## Settings (Project Settings → Script Properties, not in this code)
 | Property | Value |
