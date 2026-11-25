@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html><head><base target="_top"><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap">
+<style>body{margin:0}[hidden]{display:none!important}
+
+/* Layout: the wedding site's stationery language (blush ground, ivory cards, wine band, gold rules) applied to a two-view tool — the guest's RSVP card and the couple's dashboard. Single light look by design, matching the invitation. */
+:root {
+  --blush: #FBF0F3; --blush-2: #F6E1E8; --ivory: #FFFBF6; --rose: #8E2450; --ink: #4E1A31; --muted: #84586B;
+  --gold: #B8873B; --gold-soft: #E3C484; --line: #EAD3B0; --wine: #4A1229; --wine-2: #5E1A37;
+  --ok: #2F6B4F; --ok-bg: #E4F1EA; --no: #8E2450; --no-bg: #F7E1EA; --wait: #8A6A2E; --wait-bg: #F7EEDB;
+  --font-script: "Great Vibes", "Snell Roundhand", cursive;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-ui: "Jost", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--blush); color: var(--ink); font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+button { font: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.demo-bar { background: var(--wine); color: #F7E7EC; font-family: var(--font-ui); font-size: .82rem; letter-spacing: .02em; }
+.demo-bar .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-block: 10px; }
+.demo-bar b { color: var(--gold-soft); font-weight: 500; }
+.tabs { display: flex; gap: 6px; background: rgba(255,255,255,.08); padding: 4px; border-radius: 999px; }
+.tabs button { border: 0; background: none; color: #F7E7EC; padding: 7px 16px; border-radius: 999px; cursor: pointer; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
+.tabs button[aria-selected="true"] { background: var(--gold-soft); color: var(--wine); }
+.reset { border: 1px solid rgba(227,196,132,.5); background: none; color: var(--gold-soft); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; }
+
+.view { padding-block: clamp(28px, 6vw, 56px) 64px; }
+.head { display: grid; justify-items: center; text-align: center; gap: 6px; }
+.mono { width: 64px; height: 64px; color: var(--gold); }
+.mono text { font-family: var(--font-script); }
+.script { font-family: var(--font-script); font-weight: 400; color: var(--rose); line-height: 1.05; }
+.head .script { font-size: clamp(2.8rem, 8vw, 3.8rem); }
+.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.head p { margin: 0; color: var(--muted); font-style: italic; }
+.rule { display: flex; align-items: center; gap: 10px; color: var(--gold); margin: 10px 0 4px; }
+.rule::before, .rule::after { content: ""; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, currentColor); }
+.rule::after { background: linear-gradient(90deg, currentColor, transparent); }
+.rule i { width: 7px; height: 7px; rotate: 45deg; border: 1px solid currentColor; }
+
+.card { max-width: 620px; margin: 28px auto 0; background: var(--ivory); border: 1px solid var(--line); border-radius: 24px; padding: clamp(22px, 5vw, 38px); box-shadow: 0 24px 50px -36px rgba(78,26,49,.5); position: relative; }
+.card::after { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(201,161,90,.28); border-radius: 18px; pointer-events: none; }
+.card > * { position: relative; z-index: 1; }
+label.lbl { display: block; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.search { display: flex; gap: 10px; }
+.search input, textarea { flex: 1; min-width: 0; width: 100%; font: inherit; font-size: 1.15rem; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
+.search input:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,59,.18); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; padding: 13px 24px; border-radius: 999px; border: 1px solid var(--rose); background: var(--rose); color: #fff; cursor: pointer; white-space: nowrap; }
+.btn.ghost { background: transparent; color: var(--rose); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.hint { margin: 10px 0 0; font-size: .98rem; color: var(--muted); }
+.hint code { font-family: var(--font-ui); font-size: .85em; background: var(--blush-2); padding: 1px 7px; border-radius: 6px; }
+.matches { display: grid; gap: 10px; margin-top: 18px; }
+.match { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; cursor: pointer; color: var(--ink); }
+.match:hover { border-color: var(--gold); }
+.match b { font-family: var(--font-serif); font-weight: 600; font-size: 1.3rem; color: var(--rose); }
+.match span { font-family: var(--font-ui); font-size: .78rem; color: var(--muted); letter-spacing: .04em; }
+.empty { margin-top: 16px; color: var(--muted); font-style: italic; }
+
+.hh { text-align: center; }
+.hh .script { font-size: clamp(2.2rem, 7vw, 2.9rem); }
+.welcome { margin: 6px auto 0; max-width: 40ch; color: var(--muted); font-style: italic; }
+.back { background: none; border: 0; color: var(--muted); font-family: var(--font-ui); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; padding: 4px 0; }
+.events { display: grid; gap: 14px; margin-top: 22px; }
+.ev { border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; background: #fff; display: grid; gap: 12px; }
+.ev-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.ev-top h3 { margin: 0; font-family: var(--font-script); font-weight: 400; font-size: 2rem; line-height: 1.1; color: var(--rose); }
+.ev-top small { font-family: var(--font-ui); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+sup.th { font-size: .62em; line-height: 0; text-transform: lowercase; }
+.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.choice button { border: 1px solid var(--line); background: var(--ivory); color: var(--ink); border-radius: 999px; padding: 10px 12px; cursor: pointer; font-family: var(--font-serif); font-size: 1.08rem; font-style: italic; }
+.choice button[aria-pressed="true"].yes { background: var(--ok-bg); border-color: #9CC5AE; color: var(--ok); font-weight: 600; }
+.choice button[aria-pressed="true"].no { background: var(--no-bg); border-color: #DDA6BD; color: var(--no); font-weight: 600; }
+.count[hidden] { display: none; }
+.count { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: var(--font-ui); font-size: .82rem; color: var(--muted); letter-spacing: .04em; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--ivory); color: var(--rose); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.stepper output { min-width: 34px; text-align: center; font-family: var(--font-serif); font-weight: 700; font-size: 1.35rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.extra { margin-top: 18px; display: grid; gap: 14px; }
+textarea { resize: vertical; min-height: 64px; font-size: 1.05rem; }
+.actions { display: flex; justify-content: center; margin-top: 22px; }
+.err { text-align: center; color: var(--no); font-size: .98rem; margin: 10px 0 0; min-height: 1.2em; }
+
+.done { text-align: center; display: grid; justify-items: center; gap: 8px; }
+.done .script { font-size: clamp(2.6rem, 8vw, 3.4rem); }
+.summary { width: 100%; display: grid; gap: 8px; margin: 12px 0 6px; text-align: left; }
+.summary div { display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
+.summary b { font-family: var(--font-serif); font-size: 1.15rem; color: var(--ink); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.yes { background: var(--ok-bg); color: var(--ok); } .chip.no { background: var(--no-bg); color: var(--no); } .chip.wait { background: var(--wait-bg); color: var(--wait); }
+
+/* dashboard */
+.band { background: radial-gradient(90% 90% at 50% 0%, var(--wine-2), var(--wine)); color: #F7E7EC; border-radius: 24px; padding: clamp(20px, 4vw, 30px); margin-top: 28px; }
+.band h2 { margin: 0 0 14px; font-family: var(--font-ui); font-weight: 500; font-size: .74rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold-soft); }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.kpi { background: rgba(255,255,255,.06); border: 1px solid rgba(227,196,132,.35); border-radius: 18px; padding: 16px 18px; min-width: 0; }
+.kpi h3 { margin: 0; font-family: var(--font-script); font-weight: 400; font-size: 1.9rem; color: #FFF4EE; line-height: 1.1; }
+.kpi .big { font-family: var(--font-serif); font-weight: 700; font-size: 2.6rem; color: var(--gold-soft); line-height: 1; margin-top: 8px; font-variant-numeric: tabular-nums lining-nums; }
+.kpi .big small { font-size: .45em; font-weight: 500; color: #E2C4D0; margin-left: 4px; }
+.bar { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.1); margin: 12px 0 8px; }
+.bar i { display: block; height: 100%; }
+.bar .y { background: #8FD0AE; } .bar .n { background: #E58FB2; } .bar .w { background: rgba(255,255,255,.14); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-ui); font-size: .74rem; color: #E2C4D0; }
+.prog { margin-top: 16px; display: flex; align-items: center; gap: 14px; font-family: var(--font-ui); font-size: .85rem; color: #E2C4D0; flex-wrap: wrap; }
+.prog .bar { flex: 1; min-width: 160px; margin: 0; height: 10px; }
+.prog .bar i { background: var(--gold-soft); }
+
+.list { margin-top: 24px; background: var(--ivory); border: 1px solid var(--line); border-radius: 24px; padding: clamp(16px, 3vw, 24px); }
+.list-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.list-top h2 { margin: 0; font-family: var(--font-serif); font-weight: 600; font-size: 1.6rem; color: var(--rose); }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filters button { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .08em; }
+.filters button[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-family: var(--font-ui); font-size: .86rem; }
+th { text-align: left; font-weight: 500; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 12px 10px; border-bottom: 1px solid #F1E3D2; vertical-align: middle; }
+td.name { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+td .sub { display: block; font-family: var(--font-ui); font-size: .74rem; font-weight: 400; color: var(--muted); }
+tr.new td { background: #FFF6E6; }
+.export { margin-top: 14px; font-size: .95rem; color: var(--muted); font-style: italic; }
+.note { max-width: 620px; margin: 22px auto 0; text-align: center; font-size: .98rem; color: var(--muted); }
+
+/* per-person replies */
+.quick { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.quick button { border: 0; background: none; padding: 0; cursor: pointer; font-family: var(--font-ui); font-size: .74rem; letter-spacing: .06em; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.people { display: grid; gap: 8px; }
+.person { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid #F3E7D8; }
+.person:first-child { border-top: 0; }
+.pname { font-family: var(--font-serif); font-weight: 600; font-size: 1.15rem; color: var(--ink); min-width: 0; }
+.pname em { font-family: var(--font-ui); font-style: normal; font-weight: 400; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); margin-left: 6px; }
+.pick { display: inline-flex; gap: 6px; }
+.pick button { border: 1px solid var(--line); background: var(--ivory); color: var(--ink); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-family: var(--font-ui); font-size: .76rem; letter-spacing: .03em; white-space: nowrap; }
+.pick button.yes[aria-pressed="true"] { background: var(--ok-bg); border-color: #9CC5AE; color: var(--ok); font-weight: 600; }
+.pick button.no[aria-pressed="true"] { background: var(--no-bg); border-color: #DDA6BD; color: var(--no); font-weight: 600; }
+.addp { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); }
+.summary .who { display: grid; justify-items: end; gap: 2px; text-align: right; }
+.summary .who small { font-family: var(--font-ui); font-size: .76rem; color: var(--muted); }
+td .names { margin-top: 4px; }
+.flag { display: block; font-family: var(--font-ui); font-size: .74rem; color: var(--wait); background: var(--wait-bg); padding: 3px 8px; border-radius: 8px; margin-bottom: 4px; }
+
+/* open form */
+.start { display: grid; gap: 12px; }
+.choice-big { display: grid; gap: 4px; text-align: left; width: 100%; background: var(--rose); color: #fff; border: 1px solid var(--rose); border-radius: 18px; padding: 18px 20px; cursor: pointer; }
+.choice-big b { font-family: var(--font-serif); font-weight: 600; font-size: 1.4rem; }
+.choice-big span { font-family: var(--font-ui); font-size: .82rem; opacity: .85; }
+.choice-big.alt { background: #fff; color: var(--ink); border-color: var(--line); }
+.choice-big.alt b { color: var(--rose); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.inp { width: 100%; min-width: 0; font: inherit; font-size: 1.1rem; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.inp:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,135,59,.18); }
+.sec { margin-top: 22px; }
+.plist { display: grid; gap: 8px; }
+.prow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px; gap: 8px; align-items: center; }
+.rm { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--ivory); color: var(--muted); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+.rm:disabled { opacity: .35; cursor: default; }
+.addg { margin-top: 10px; border: 1px dashed var(--gold); background: none; color: var(--gold); border-radius: 999px; padding: 8px 16px; cursor: pointer; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .08em; }
+.pname i { font-weight: 500; color: var(--muted); }
+.find { font: inherit; font-family: var(--font-ui); font-size: .85rem; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; min-width: 0; width: min(260px, 100%); background: #fff; color: var(--ink); }
+@media (max-width: 520px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+
+/* team bride / team groom */
+.sec.first { margin-top: 10px; }
+.team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.team button { display: grid; gap: 2px; justify-items: center; text-align: center; border: 1px solid var(--line); background: #fff; border-radius: 16px; padding: 14px 10px; cursor: pointer; color: var(--ink); }
+.team button b { white-space: nowrap; font-family: var(--font-script); font-weight: 400; font-size: clamp(1.45rem, 5.4vw, 1.8rem); line-height: 1.1; color: var(--rose); }
+.team button span { font-family: var(--font-ui); font-size: .72rem; color: var(--muted); letter-spacing: .03em; }
+.team button[data-side="bride"][aria-pressed="true"] { background: #FBE4EE; border-color: #E3A3BF; box-shadow: 0 0 0 3px rgba(227,163,191,.25); }
+.team button[data-side="groom"][aria-pressed="true"] { background: #F7EEDB; border-color: #D7B06A; box-shadow: 0 0 0 3px rgba(215,176,106,.25); }
+.team button[data-side="groom"] b { color: #8A5A1C; }
+.tchip { display: inline-block; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
+.tchip.bride { background: #FBE4EE; color: var(--rose); } .tchip.groom { background: #F7EEDB; color: #8A5A1C; }
+.tchip.sm { font-size: .6rem; padding: 2px 8px; vertical-align: middle; letter-spacing: .1em; }
+.kpi .sides { display: flex; gap: 14px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(227,196,132,.25); font-family: var(--font-ui); font-size: .76rem; color: #E2C4D0; }
+.kpi .sides b { color: #FFF4EE; font-weight: 600; margin-left: 4px; }
+.prog { flex-direction: column; align-items: stretch; }
+.split { display: flex; gap: 4px; border-radius: 999px; overflow: hidden; }
+.split i { font-style: normal; font-family: var(--font-ui); font-size: .74rem; padding: 6px 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.split .b { background: #E8A9C4; color: var(--wine); } .split .g { background: var(--gold-soft); color: var(--wine); text-align: right; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+@media (max-width: 720px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .search { flex-direction: column; } .choice button { font-size: 1rem; } }
+@media (prefers-reduced-motion: no-preference) { .card, .band, .list { animation: up .5s ease both; } @keyframes up { from { opacity: .3; transform: translateY(10px); } to { opacity: 1; transform: none; } } }
+
+.loading { text-align: center; color: var(--muted); font-style: italic; padding: 20px 0; }
+.closed { text-align: center; display: grid; gap: 8px; justify-items: center; }
+.closed .script { font-size: 2.6rem; }
+.btn.busy { opacity: .6; pointer-events: none; }
+.couple-link { display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; margin: 28px auto 0; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--ivory); font-family: var(--font-ui); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.couple-link:hover { color: var(--rose); border-color: var(--gold); }
+.couple-link svg { width: 14px; height: 14px; }
+.site-link { display: block; text-align: center; margin-top: 18px; font-family: var(--font-ui); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+
+.inp.bad, .search input.bad { border-color: #D9849F; box-shadow: 0 0 0 3px rgba(217,132,159,.18); }
+.fmsg { min-height: 1.1em; margin: 6px 2px 0; font-family: var(--font-ui); font-size: .76rem; color: var(--no); }
+
+.personal { margin: 4px auto 0; max-width: 36ch; font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--rose); line-height: 1.35; }
+.cal { width: 100%; margin-top: 6px; text-align: left; }
+.calbtns { display: flex; flex-wrap: wrap; gap: 8px; }
+.calbtn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); text-decoration: none; font-family: var(--font-ui); font-size: .8rem; }
+.calbtn:hover { border-color: var(--gold); color: var(--rose); }
+.calbtn svg { width: 15px; height: 15px; color: var(--gold); }
+a.btn { text-decoration: none; }
+.done .actions .btn { white-space: normal; text-align: center; max-width: 100%; }
+.done { min-width: 0; } .done .actions { width: 100%; }
+.kid { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin: -2px 0 6px 4px; font-family: var(--font-ui); font-size: .78rem; color: var(--muted); cursor: pointer; width: max-content; }
+.home-back { justify-self: center; margin-top: 6px; padding: 6px 4px; font-family: var(--font-ui); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.home-back:hover { color: var(--rose); text-decoration: underline; text-underline-offset: 3px; }
+.conf { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+.conf .btn { padding: 10px 16px; font-size: .72rem; letter-spacing: .14em; white-space: normal; }
+.mono-link { display: inline-block; border-radius: 50%; line-height: 0; transition: transform .2s ease; }
+.mono-link:hover { transform: scale(1.06); }
+.kid input { accent-color: var(--rose); width: 16px; height: 16px; margin: 0; }
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-mono" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width=".6"/><text x="35" y="61" text-anchor="middle" font-size="32" fill="currentColor">V</text><text x="51" y="58" text-anchor="middle" font-size="17" fill="currentColor">&amp;</text><text x="65" y="64" text-anchor="middle" font-size="32" fill="currentColor">S</text></symbol>
+</defs></svg>
+<main class="wrap">
+  <section class="view">
+    <div class="head">
+      <a class="mono-link" href="<?= site ?>" target="_top" aria-label="Back to the wedding website" title="Back to the wedding website"><svg class="mono" aria-hidden="true"><use href="#i-mono"/></svg></a>
+      <span class="eyebrow">Will you join us?</span>
+      <span class="script">Kindly reply</span>
+      <p>Let us know which celebrations you can join</p>
+      <span class="rule" aria-hidden="true"><i></i></span>
+    </div>
+    <div class="card" id="g-card"></div>
+    <p class="note">You can come back any time and change your reply using your phone number.</p>
+    <a class="couple-link" href="<?= url ?>?view=dashboard" target="_top"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g></svg>Couple's dashboard</a>
+  </section>
+</main>
+<script>
+const EVENTS = [
+  { id: "sangeet", name: "Pithi / Sangeet", when: "Fri 29<sup class='th'>th</sup> Jan · 6:30 PM" },
+  { id: "nikkah", name: "Nikkah", when: "Sat 30<sup class='th'>th</sup> Jan · Time TBA" },
+  { id: "reception", name: "Reception", when: "Sat 30<sup class='th'>th</sup> Jan · 7:00 PM" },
+];
+const ALL = v => ({ sangeet: v, nikkah: v, reception: v });
+const P = (f, l, a) => ({ f, l, k: false, a: a || ALL(null) });
+const kidTag = x => x.k ? " (child)" : "";
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const digits = s => String(s).replace(/\D/g, "").slice(-10);
+/* phone: US 10-digit, formatted as you type, checked when you leave the box */
+const rawDigits = v => { let d = String(v).replace(/\D/g, ""); if (d.length === 11 && d[0] === "1") d = d.slice(1); return d; };
+const telDigits = v => rawDigits(v).slice(0, 10);
+const telValid = d => /^[2-9]\d{2}[2-9]\d{6}$/.test(d);
+const telFmt = d => !d ? "" : d.length < 4 ? `(${d}` : d.length < 7 ? `(${d.slice(0,3)}) ${d.slice(3)}` : `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+function telMask(inp, msgEl, onChange) {
+  const show = () => { const d = telDigits(inp.value); const short = d.length > 0 && d.length < 10, wrong = d.length === 10 && !telValid(d); inp.classList.toggle("bad", short || wrong); msgEl.textContent = short ? `Please enter a 10-digit phone number (${d.length} of 10 so far).` : wrong ? "Please check the number. US and Canadian numbers don't start with 0 or 1." : ""; return d.length === 10 && telValid(d); };
+  inp.addEventListener("input", () => { const d = telDigits(inp.value); inp.value = telFmt(d); onChange && onChange(d); if (inp.classList.contains("bad")) show(); });
+  inp.addEventListener("blur", show);
+  inp.addEventListener("paste", e => { e.preventDefault(); const raw = rawDigits((e.clipboardData || window.clipboardData).getData("text"));
+    if (raw.length > 10) { inp.value = ""; onChange && onChange(""); inp.classList.add("bad"); msgEl.textContent = "That looks like a number from outside the US or Canada. Please enter a US or Canadian 10-digit number."; return; }
+    const d = raw.slice(0, 10); inp.value = telFmt(d); onChange && onChange(d); show(); });
+  return show;
+}
+const fmtPhone = d => d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length === 7 ? `${d.slice(0,3)}-${d.slice(3)}` : d;
+const fullName = x => `${x.f} ${x.l}`.trim();
+const server = (fn, ...args) => new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(e => rej(e && e.message ? e : new Error(String(e))))[fn](...args));
+const gc = $("#g-card");
+let CONFIG = { open: true };
+
+function stepStart() {
+  if (!CONFIG.open) {
+    gc.innerHTML = `<div class="closed"><span class="script">RSVPs have closed</span><p class="welcome">If you still need to reply or change something, please message us directly.</p></div>`;
+    return;
+  }
+  gc.innerHTML = `
+    <div class="start">
+      <button type="button" class="choice-big" id="go-new"><b>Reply to our invitation</b><span>Tell us who's coming and to which celebrations</span></button>
+      <button type="button" class="choice-big alt" id="go-edit"><b>Change an earlier reply</b><span>Look it up with the phone number you used</span></button>
+      ${SITE_URL ? `<a class="home-back" href="${esc(SITE_URL)}" target="_top">← Back to the wedding website</a>` : ""}
+    </div>`;
+  $("#go-new").addEventListener("click", () => stepForm(null));
+  $("#go-edit").addEventListener("click", stepLookup);
+}
+function stepLookup() {
+  gc.innerHTML = `
+    <button class="back" type="button" id="bk">← Back</button>
+    <label class="lbl" for="ph" style="margin-top:10px">Phone number you replied with</label>
+    <form class="search" id="lf"><input id="ph" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123-456-7890"><button class="btn" type="submit" id="lfb">Find</button></form>
+    <p class="fmsg" id="phmsg" aria-live="polite"></p>
+    <p class="err" id="err" aria-live="polite"></p>`;
+  $("#bk").addEventListener("click", stepStart);
+  const phOk = telMask($("#ph"), $("#phmsg"));
+  $("#lf").addEventListener("submit", async e => {
+    e.preventDefault(); const d = telDigits($("#ph").value), b = $("#lfb");
+    if (d.length !== 10) { phOk(); $("#ph").classList.add("bad"); $("#phmsg").textContent = "Please enter the full 10-digit phone number you replied with."; return; }
+    if (!telValid(d)) { phOk(); return; }
+    b.classList.add("busy"); b.textContent = "Finding…";
+    try {
+      const h = await server("findReply", d);
+      if (!h) { $("#err").textContent = "We couldn't find a reply with that number. Check it, or send a new reply."; b.classList.remove("busy"); b.textContent = "Find"; return; }
+      stepForm(h);
+    } catch (err) { $("#err").textContent = err.message; b.classList.remove("busy"); b.textContent = "Find"; }
+  });
+}
+function stepForm(h) {
+  const draft = h ? JSON.parse(JSON.stringify(h)) : { family: "", side: "", phone: "", people: [P("", "")], note: "" };
+  let telOk = () => false;
+  function render() {
+    gc.innerHTML = `
+      <button class="back" type="button" id="bk">← Back</button>
+      ${h ? `<div class="hh"><span class="script">${esc(draft.family)} Family</span><p class="welcome">Welcome back! You replied on ${esc(h.at)}. Change anything below and save again.</p></div>` : ""}
+      <div class="sec first"><span class="lbl">Which side are you celebrating with?</span>
+        <div class="team">
+          <button type="button" data-side="bride" aria-pressed="${draft.side === "bride"}"><b>Team Bride</b><span>Virani family &amp; friends</span></button>
+          <button type="button" data-side="groom" aria-pressed="${draft.side === "groom"}"><b>Team Groom</b><span>Sorathia family &amp; friends</span></button>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:20px">
+        <div><label class="lbl" for="fam">Family name</label><input class="inp" id="fam" autocomplete="family-name" placeholder="Last name" value="${esc(draft.family)}"></div>
+        <div><label class="lbl" for="tel">Phone number</label><input class="inp" id="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123-456-7890" value="${esc(draft.phone ? telFmt(telDigits(draft.phone)) : "")}" ${h ? "readonly" : ""}><p class="fmsg" id="telmsg" aria-live="polite"></p></div>
+      </div>
+      <div class="sec"><span class="lbl">Who's in your party?</span>
+        <div class="plist">${draft.people.map((x, k) => `
+          <div class="prow" data-k="${k}">
+            <input class="inp" data-fld="f" aria-label="First name, guest ${k + 1}" placeholder="First name" value="${esc(x.f)}">
+            <input class="inp" data-fld="l" aria-label="Last name, guest ${k + 1}" placeholder="Last name" value="${esc(x.l)}">
+            <button type="button" class="rm" aria-label="Remove guest ${k + 1}" ${draft.people.length < 2 ? "disabled" : ""}>×</button>
+            <label class="kid"><input type="checkbox" data-kid ${x.k ? "checked" : ""}> Child (under 10)</label>
+          </div>`).join("")}</div>
+        <button type="button" class="addg" id="addg">+ Add another guest</button>
+      </div>
+      <div class="sec"><span class="lbl">Which celebrations can you join?</span>
+        <div class="events">${EVENTS.map(e => `
+          <div class="ev" data-ev="${e.id}">
+            <div class="ev-top"><h3>${e.name}</h3><small>${e.when}</small></div>
+            <div class="quick"><button type="button" data-all="1">Everyone's coming</button><button type="button" data-all="0">None of us can make it</button></div>
+            <div class="people">${draft.people.map((x, k) => `
+              <div class="person">
+                <span class="pname">${esc(fullName(x)) || `<i>Guest ${k + 1}</i>`}${x.k ? "<em>Child</em>" : ""}</span>
+                <span class="pick"><button type="button" class="yes" data-k="${k}" data-v="1" aria-pressed="${x.a[e.id] === true}">Attending</button><button type="button" class="no" data-k="${k}" data-v="0" aria-pressed="${x.a[e.id] === false}">Can't make it</button></span>
+              </div>`).join("")}</div>
+          </div>`).join("")}</div>
+      </div>
+      <p class="err" id="err" aria-live="polite"></p>
+      <div class="actions"><button class="btn" type="button" id="sv">${h ? "Update our reply" : "Send our reply"}</button></div>`;
+    $("#bk").addEventListener("click", stepStart);
+    gc.querySelectorAll(".team button").forEach(b => b.addEventListener("click", () => { draft.side = b.dataset.side; gc.querySelectorAll(".team button").forEach(x => x.setAttribute("aria-pressed", x === b)); $("#err").textContent = ""; }));
+    $("#fam").addEventListener("input", e => {
+      const old = draft.family; draft.family = e.target.value.trim();
+      draft.people.forEach((x, k) => { if (!x.l || x.l === old) { x.l = draft.family; const inp = gc.querySelector(`.prow[data-k="${k}"] [data-fld="l"]`); if (inp) inp.value = x.l; } });
+      syncNames();
+    });
+    telOk = telMask($("#tel"), $("#telmsg"), d => draft.phone = d);
+    gc.querySelectorAll(".prow").forEach(r => {
+      const k = +r.dataset.k;
+      r.querySelectorAll("[data-fld]").forEach(inp => inp.addEventListener("input", () => { draft.people[k][inp.dataset.fld] = inp.value.trim(); syncNames(); }));
+      r.querySelector(".rm").addEventListener("click", () => { draft.people.splice(k, 1); render(); });
+      r.querySelector("[data-kid]").addEventListener("change", e => { draft.people[k].k = e.target.checked; syncNames(); });
+    });
+    $("#addg").addEventListener("click", () => { draft.people.push(P("", draft.family)); render(); const rows = gc.querySelectorAll(".prow"); rows[rows.length - 1].querySelector("input").focus(); });
+    gc.querySelectorAll(".ev").forEach(box => {
+      const ev = box.dataset.ev;
+      box.querySelectorAll(".pick button").forEach(b => b.addEventListener("click", () => {
+        draft.people[+b.dataset.k].a[ev] = b.dataset.v === "1";
+        const row = b.parentElement; row.querySelector(".yes").setAttribute("aria-pressed", b.dataset.v === "1"); row.querySelector(".no").setAttribute("aria-pressed", b.dataset.v === "0"); $("#err").textContent = "";
+      }));
+      box.querySelectorAll(".quick button").forEach(b => b.addEventListener("click", () => {
+        const v = b.dataset.all === "1"; draft.people.forEach(x => x.a[ev] = v);
+        box.querySelectorAll(".person").forEach(r => { r.querySelector(".yes").setAttribute("aria-pressed", v); r.querySelector(".no").setAttribute("aria-pressed", !v); }); $("#err").textContent = "";
+      }));
+    });
+    $("#sv").addEventListener("click", submit);
+  }
+  function syncNames() { gc.querySelectorAll(".ev").forEach(box => box.querySelectorAll(".pname").forEach((el, k) => { const n = fullName(draft.people[k]); el.innerHTML = (n ? esc(n) : `<i>Guest ${k + 1}</i>`) + (draft.people[k].k ? "<em>Child</em>" : ""); })); }
+  let sending = false;
+  async function submit() {
+    if (sending) return;
+    const err = $("#err"), b = $("#sv");
+    if (!draft.side) return err.textContent = "Please choose Team Bride or Team Groom.";
+    if (!draft.family) return err.textContent = "Please add your family name.";
+    if (draft.phone.length !== 10 || !telValid(draft.phone)) { telOk(); $("#tel").classList.add("bad"); $("#tel").scrollIntoView({ block: "center", behavior: "smooth" }); $("#tel").focus(); return err.textContent = !draft.phone ? "Please add your phone number, so you can update your reply later." : draft.phone.length !== 10 ? "Please enter a full 10-digit phone number." : "Please enter a US or Canadian 10-digit number."; }
+    const noName = draft.people.findIndex(x => !x.f);
+    if (noName > -1) return err.textContent = `Please add a first name for guest ${noName + 1}.`;
+    const miss = draft.people.find(x => EVENTS.some(e => x.a[e.id] === null));
+    if (miss) return err.textContent = `Please choose for ${miss.f} at every celebration.`;
+    b.classList.add("busy"); b.textContent = "Sending…"; err.textContent = ""; sending = true;
+    try {
+      const r = await server("saveReply", { mode: h ? "edit" : "new", side: draft.side, family: draft.family, phone: draft.phone, note: draft.note, people: draft.people });
+      if (r && r.conflict) {
+        sending = false; b.classList.remove("busy"); b.textContent = "Send our reply";
+        err.innerHTML = `This phone number already has a reply from the <b>${esc(r.existingFamily)} Family</b>. Is that you?<span class="conf"><button type="button" class="btn" id="cf-edit">Change that reply</button><button type="button" class="btn ghost" id="cf-new">Use a different number</button></span>`;
+        $("#cf-edit").addEventListener("click", async () => {
+          const c = $("#cf-edit"); c.classList.add("busy"); c.textContent = "Opening…";
+          try { const found = await server("findReply", draft.phone); if (found) { stepForm(found); gc.scrollIntoView({ behavior: "smooth" }); } else { err.textContent = "Please try again."; } }
+          catch (e2) { err.textContent = e2.message || "Please try again."; }
+        });
+        $("#cf-new").addEventListener("click", () => { err.textContent = ""; const t = $("#tel"); t.scrollIntoView({ block: "center", behavior: "smooth" }); t.focus(); t.select(); });
+        return;
+      }
+      stepDone(r.family, r.updated);
+    } catch (e) { sending = false; err.textContent = e.message || "Something went wrong. Please try again."; b.classList.remove("busy"); b.textContent = h ? "Update our reply" : "Send our reply"; }
+  }
+  render();
+}
+/* The website link comes from the SITE_URL setting; with none set, the back-to-website links are hidden. */
+const SITE_URL = document.querySelector(".mono-link").getAttribute("href") || "";
+if (!SITE_URL) document.querySelectorAll(".mono-link").forEach(a => { a.removeAttribute("href"); a.removeAttribute("title"); a.removeAttribute("aria-label"); });
+const CAL = {
+  sangeet: { title: "Pithi / Sangeet", dates: "20270129T183000/20270130T000000", loc: "The Franciscan Event Center, 6553 S Revere Pkwy, Centennial, CO 80111" },
+  nikkah: { title: "Nikkah", dates: "20270130/20270131", loc: "Ismaili Jamatkhana – Denver, 8006 E Arapahoe Rd #30, Centennial, CO 80112", details: "Time to be announced" },
+  reception: { title: "Reception", dates: "20270130T190000/20270131T000000", loc: "The Franciscan Event Center, 6553 S Revere Pkwy, Centennial, CO 80111" },
+};
+const calLink = id => { const c = CAL[id]; const q = new URLSearchParams({ action: "TEMPLATE", text: "Virani & Sorathia's wedding · " + c.title, dates: c.dates, location: c.loc, ctz: "America/Denver" }); if (c.details) q.set("details", c.details); return "https:\/\/calendar.google.com\/calendar\/render?" + q; };
+function personalLine(h) {
+  const yes = EVENTS.filter(e => h.people.some(x => x.a[e.id]));
+  if (!yes.length) return "We'll miss you, and thank you for letting us know. You'll be in our hearts on the day.";
+  if (yes.length === 3) return "You're coming to everything! We couldn't be happier.";
+  const lines = { sangeet: "See you on the dance floor at the Sangeet!", nikkah: "We're so happy you'll be with us for our Nikkah.", reception: "Get ready to celebrate with us at the Reception!" };
+  return yes.map(e => lines[e.id]).join(" ");
+}
+function stepDone(h, was) {
+  const allNo = h.people.every(x => EVENTS.every(e => x.a[e.id] === false));
+  const yesEv = EVENTS.filter(e => h.people.some(x => x.a[e.id]));
+  gc.innerHTML = `
+    <div class="done">
+      <span class="script">${allNo ? "We'll miss you" : "Thank you!"}</span>
+      <span class="tchip ${h.side}">Team ${h.side === "bride" ? "Bride" : "Groom"}</span>
+      <p class="welcome">${was ? "Your reply has been updated." : "Your reply has been received."}</p>
+      <p class="personal">${esc(personalLine(h))}</p>
+      <div class="summary">${EVENTS.map(e => { const y = h.people.filter(x => x.a[e.id]); return `<div><b>${e.name}</b><span class="who">${y.length ? `<span class="chip yes">${y.length} attending</span><small>${esc(y.map(x => x.f + kidTag(x)).join(", "))}</small>` : `<span class="chip no">Not attending</span>`}</span></div>`; }).join("")}</div>
+      ${yesEv.length ? `<div class="cal">
+        <span class="lbl">Add to your calendar</span>
+        <div class="calbtns">${yesEv.map(e => `<a class="calbtn" href="${calLink(e.id)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></svg>${e.name}</a>`).join("")}</div>
+      </div>` : ""}
+      <p class="hint">Plans changed? Come back to this page, choose “Change an earlier reply” and use ${esc(fmtPhone(h.phone))}.</p>
+      <div class="actions" style="gap:10px;flex-wrap:wrap">${SITE_URL ? `<a class="btn" href="${esc(SITE_URL)}" target="_top">Back to the wedding website</a>` : ""}<button class="btn ghost" type="button" id="chg">Change my reply</button></div>
+    </div>`;
+  $("#chg").addEventListener("click", () => stepForm(h));
+}
+gc.innerHTML = `<p class="loading">One moment…</p>`;
+server("getConfig").then(c => { CONFIG = c; stepStart(); }).catch(() => stepStart());
+</script>
+</body></html>
