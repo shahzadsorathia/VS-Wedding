@@ -90,6 +90,8 @@ td .names { margin-top: 4px; }
 .tchip { display: inline-block; font-family: var(--font-ui); text-transform: uppercase; border-radius: 999px; }
 .tchip.bride { background: #FBE4EE; color: var(--rose); } .tchip.groom { background: #F7EEDB; color: #8A5A1C; }
 .tchip.sm { font-size: .6rem; padding: 2px 8px; vertical-align: middle; letter-spacing: .1em; }
+.dup { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; background: #FDF1D6; color: #7A4E0E; font-family: var(--font-ui); font-size: .7rem; letter-spacing: .02em; }
+.dupnote { margin: 0 0 12px; padding: 10px 14px; border-radius: 12px; background: #FDF1D6; color: #7A4E0E; font-family: var(--font-ui); font-size: .82rem; }
 
 .mono-link { display: inline-block; border-radius: 50%; line-height: 0; transition: transform .2s ease; }
 .mono-link:hover { transform: scale(1.06); }
@@ -137,6 +139,7 @@ td .names { margin-top: 4px; }
           <input class="find" id="find" type="search" placeholder="Search a name or phone" aria-label="Search the guest list">
         </div>
       </div>
+      <p class="dupnote" id="dupnote" hidden></p>
       <div class="tbl"><table>
         <thead><tr><th>Family</th><th>Pithi / Sangeet</th><th>Nikkah</th><th>Reception</th></tr></thead>
         <tbody id="rows"></tbody>
@@ -179,9 +182,23 @@ function renderDash() {
     </div>
     ${people.length ? `<span class="split" aria-hidden="true"><i class="b" style="flex:${gb || .001}"></i><i class="g" style="flex:${gg || .001}"></i></span>` : ""}`;
   const t = q.trim().toLowerCase();
+  /* Possible duplicates: two replies that share a guest's full name, or the same family name with a shared first name
+     (for example husband and wife each replying with their own phone). Shown for review only. */
+  const norm = s => String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+  const dupOf = {};
+  state.forEach((a, i) => state.forEach((b, j) => {
+    if (j <= i) return;
+    const an = a.people.map(fullName).map(norm), bn = new Set(b.people.map(fullName).map(norm));
+    const af = a.people.map(x => norm(x.f)), bf = new Set(b.people.map(x => norm(x.f)));
+    const same = an.some(n => n && bn.has(n)) || (norm(a.family) === norm(b.family) && af.some(f => f && bf.has(f)));
+    if (same) { (dupOf[a.id] = dupOf[a.id] || []).push(b); (dupOf[b.id] = dupOf[b.id] || []).push(a); }
+  }));
+  const dups = Object.keys(dupOf).length;
+  $("#dupnote").hidden = !dups;
+  $("#dupnote").textContent = dups ? `${dups} replies look like possible duplicates (marked below). Check them before giving final numbers; delete the extra one in the Google Sheet.` : "";
   const td = t.replace(/\D/g, "");
   const rows = state.filter(h => side === "all" || h.side === side).filter(h => !t || h.family.toLowerCase().includes(t) || h.people.some(x => fullName(x).toLowerCase().includes(t)) || (td.length >= 3 && String(h.phone || "").includes(td)));
-  $("#rows").innerHTML = rows.map(h => `<tr><td class="name">${esc(h.family)} Family <span class="tchip sm ${h.side}">${h.side === "bride" ? "Bride" : "Groom"}</span><span class="sub">${esc(h.people.map(x => fullName(x) + kidTag(x)).join(", "))}</span><span class="sub">${esc(fmtPhone(h.phone))} · replied ${esc(h.at)}</span></td>
+  $("#rows").innerHTML = rows.map(h => `<tr><td class="name">${esc(h.family)} Family <span class="tchip sm ${h.side}">${h.side === "bride" ? "Bride" : "Groom"}</span><span class="sub">${esc(h.people.map(x => fullName(x) + kidTag(x)).join(", "))}</span><span class="sub">${esc(fmtPhone(h.phone))} · replied ${esc(h.at)}</span>${dupOf[h.id] ? `<span class="dup">Possible duplicate of ${esc(dupOf[h.id].map(o => o.family + " Family, " + fmtPhone(o.phone)).join("; "))}</span>` : ""}</td>
     ${EVENTS.map(e => { const y = h.people.filter(x => x.a[e.id]); return `<td>${y.length ? `<span class="chip yes">${y.length} of ${h.people.length}</span><span class="sub names">${esc(y.map(x => x.f + kidTag(x)).join(", "))}</span>` : `<span class="chip no">None</span>`}</td>`; }).join("")}
 </tr>`).join("") || `<tr><td colspan="4" style="text-align:center;color:var(--muted);font-family:var(--font-serif);font-style:italic">${state.length ? "No matching names." : "No replies yet."}</td></tr>`;
 }
