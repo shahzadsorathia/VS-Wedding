@@ -24,7 +24,7 @@ button { font: inherit; }
 .mono text { font-family: var(--font-script); }
 .script { font-family: var(--font-script); font-weight: 400; color: var(--rose); line-height: 1.05; }
 .head .script { font-size: clamp(1.9rem, 5.5vw, 2.4rem); }
-.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.eyebrow { font-family: var(--font-ui); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #85601F; }
 .head p { margin: 0; color: var(--muted); font-style: italic; }
 
 .card { max-width: 620px; margin: 28px auto 0; background: var(--ivory); border: 1px solid var(--line); border-radius: 24px; padding: clamp(22px, 5vw, 38px); box-shadow: 0 24px 50px -36px rgba(78,26,49,.5); position: relative; }
@@ -134,7 +134,7 @@ td .names { margin-top: 4px; }
         <h2>Guest list</h2>
         <div class="tools">
           <div class="filters" id="sidef"><button type="button" data-s="all" aria-pressed="true">All</button><button type="button" data-s="bride" aria-pressed="false">Team Bride</button><button type="button" data-s="groom" aria-pressed="false">Team Groom</button></div>
-          <input class="find" id="find" type="search" placeholder="Search a name" aria-label="Search the guest list">
+          <input class="find" id="find" type="search" placeholder="Search a name or phone" aria-label="Search the guest list">
         </div>
       </div>
       <div class="tbl"><table>
@@ -179,7 +179,8 @@ function renderDash() {
     </div>
     ${people.length ? `<span class="split" aria-hidden="true"><i class="b" style="flex:${gb || .001}"></i><i class="g" style="flex:${gg || .001}"></i></span>` : ""}`;
   const t = q.trim().toLowerCase();
-  const rows = state.filter(h => side === "all" || h.side === side).filter(h => !t || h.family.toLowerCase().includes(t) || h.people.some(x => fullName(x).toLowerCase().includes(t)));
+  const td = t.replace(/\D/g, "");
+  const rows = state.filter(h => side === "all" || h.side === side).filter(h => !t || h.family.toLowerCase().includes(t) || h.people.some(x => fullName(x).toLowerCase().includes(t)) || (td.length >= 3 && String(h.phone || "").includes(td)));
   $("#rows").innerHTML = rows.map(h => `<tr><td class="name">${esc(h.family)} Family <span class="tchip sm ${h.side}">${h.side === "bride" ? "Bride" : "Groom"}</span><span class="sub">${esc(h.people.map(x => fullName(x) + kidTag(x)).join(", "))}</span><span class="sub">${esc(fmtPhone(h.phone))} · replied ${esc(h.at)}</span></td>
     ${EVENTS.map(e => { const y = h.people.filter(x => x.a[e.id]); return `<td>${y.length ? `<span class="chip yes">${y.length} of ${h.people.length}</span><span class="sub names">${esc(y.map(x => x.f + kidTag(x)).join(", "))}</span>` : `<span class="chip no">None</span>`}</td>`; }).join("")}
 </tr>`).join("") || `<tr><td colspan="4" style="text-align:center;color:var(--muted);font-family:var(--font-serif);font-style:italic">${state.length ? "No matching names." : "No replies yet."}</td></tr>`;
