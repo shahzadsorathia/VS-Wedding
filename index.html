@@ -95,13 +95,14 @@ img { display: block; }
 .scene .words { display: none; }
 
 /* film dialog */
-dialog.film { border: 0; padding: 0; background: transparent; overflow: visible; max-height: none; max-width: none; width: min(92vw, 420px, calc((100dvh - 72px) * 9 / 16)); }
+dialog.film { border: 0; padding: 0; background: transparent; overflow: visible; max-height: none; max-width: none; width: min(92vw, 420px, calc((100dvh - 180px) * 9 / 16)); }
 dialog.film::backdrop { background: rgba(46, 10, 26, .82); backdrop-filter: blur(4px); }
 dialog.film video { width: 100%; aspect-ratio: 9 / 16; border-radius: 18px; background: #000; }
 dialog.film .film-msg { margin: 10px 0 0; text-align: center; font-family: var(--font-ui); font-size: .85rem; color: #FFF4EE; min-height: 1.2em; }
 .seal:focus-visible, .tassel:focus-visible { outline: none; }
-dialog.film .close { position: absolute; top: 10px; right: 10px; z-index: 2; display: grid; place-items: center; padding: 0; background: rgba(30,6,16,.62); border: 1px solid rgba(255,255,255,.75); color: #fff; border-radius: 999px; width: 42px; height: 42px; font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+dialog.film .close { position: absolute; top: -52px; right: 0; z-index: 2; display: grid; place-items: center; padding: 0; background: rgba(30,6,16,.62); border: 1px solid rgba(255,255,255,.75); color: #fff; border-radius: 999px; width: 42px; height: 42px; font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.35); }
 dialog.film .close:hover, dialog.film .close:focus-visible { background: rgba(142,36,80,.9); }
+@media (orientation: landscape) and (max-height: 520px) { dialog.film { width: min(92vw, 420px, calc((100dvh - 64px) * 9 / 16)); } dialog.film .close { top: 0; right: -54px; } }
 
 /* sections */
 .block { padding-block: clamp(70px, 11vw, 140px); }
