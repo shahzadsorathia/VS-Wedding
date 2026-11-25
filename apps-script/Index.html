@@ -409,6 +409,12 @@ const CAL = {
   nikkah: { title: "Nikkah", dates: "20270130/20270131", loc: "Ismaili Jamatkhana – Denver, 8006 E Arapahoe Rd #30, Centennial, CO 80112", details: "Time to be announced" },
   reception: { title: "Reception", dates: "20270130T190000/20270131T000000", loc: "The Franciscan Event Center, 6553 S Revere Pkwy, Centennial, CO 80111" },
 };
+/* Apple Calendar files live on the wedding website. */
+const ICS = { sangeet: "pithi-sangeet.ics", nikkah: "nikkah.ics", reception: "reception.ics" };
+const icsLink = id => SITE_URL ? SITE_URL.replace(/\/?$/, "/") + "assets/calendar/" + ICS[id] : "";
+/* One button per event that suits the device: iPhone, iPad and Mac get the Apple Calendar file, everyone else Google. */
+const CAL_FILE = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+const calFor = id => CAL_FILE && SITE_URL ? icsLink(id) : calLink(id);
 const calLink = id => { const c = CAL[id]; const q = new URLSearchParams({ action: "TEMPLATE", text: "Virani & Sorathia's wedding · " + c.title, dates: c.dates, location: c.loc, ctz: "America/Denver" }); if (c.details) q.set("details", c.details); return "https:\/\/calendar.google.com\/calendar\/render?" + q; };
 function personalLine(h) {
   const yes = EVENTS.filter(e => h.people.some(x => x.a[e.id]));
@@ -429,7 +435,7 @@ function stepDone(h, was) {
       <div class="summary">${EVENTS.map(e => { const y = h.people.filter(x => x.a[e.id]); return `<div><b>${e.name}</b><span class="who">${y.length ? `<span class="chip yes">${y.length} attending</span><small>${esc(y.map(x => x.f + kidTag(x)).join(", "))}</small>` : `<span class="chip no">Not attending</span>`}</span></div>`; }).join("")}</div>
       ${yesEv.length ? `<div class="cal">
         <span class="lbl">Add to your calendar</span>
-        <div class="calbtns">${yesEv.map(e => `<a class="calbtn" href="${calLink(e.id)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></svg>${e.name}</a>`).join("")}</div>
+        <div class="calbtns">${yesEv.map(e => `<a class="calbtn" href="${calFor(e.id)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></svg>${e.name}</a>`).join("")}</div>
       </div>` : ""}
       <p class="hint">Plans changed? Come back to this page, choose “Change an earlier reply” and use ${esc(fmtPhone(h.phone))}.</p>
       <div class="actions" style="gap:10px;flex-wrap:wrap">${SITE_URL ? `<a class="btn" href="${esc(SITE_URL)}" target="_top">Back to the wedding website</a>` : ""}<button class="btn ghost" type="button" id="chg">Change my reply</button></div>
