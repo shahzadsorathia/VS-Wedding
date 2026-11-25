@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
 <meta name="description" content="Denver · January 2027">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://shahzadsorathia.github.io/VS-Wedding/">
@@ -216,6 +217,9 @@ main, footer { overflow-x: clip; }
 .ev3 .where.tbd, .ev3 .time.tbd { font-style: italic; color: #D9B9C6; }
 .ev3 .time.tbd { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: .02em; text-transform: none; }
 .ev3 .addr { margin: -4px 0 0; color: #D9B9C6; font-size: .92rem; line-height: 1.4; }
+.ev3 a.addr, .spot a.addr { text-decoration: underline dotted; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ev3 a.addr { color: #D9B9C6; } .ev3 a.addr:hover { color: #FFF4EE; }
+.spot a.addr { display: block; color: var(--muted); } .spot a.addr:hover { color: var(--rose); }
 .ev3 .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
 .ev3 .links .btn { padding: 9px 16px; font-size: .7rem; }
 @media (max-width: 860px) { .events3 { grid-template-columns: minmax(0, 1fr); max-width: 460px; margin-inline: auto; } }
@@ -1133,7 +1137,8 @@ function makeDhol() {
     else if (e.icon === "nikkah") { lotus = makeNikkah(); }
     else { lotus = svgUse(e.icon || "i-lotus"); lotus.setAttribute("class", "lotus"); lotus.setAttribute("aria-hidden", "true"); }
     const time = e.start ? fmtTime(e.start) : null;
-    const where = e.venue ? el("p", { class: "where" }, e.venue, e.address ? el("span", { class: "addr", style: "display:block;margin-top:4px" }, e.address) : null) : e.tbd ? el("p", { class: "where tbd" }, "Venue to be announced") : el("p", { class: "where" }, VENUE.venue);
+    const mapUrl = e.address ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([e.venue, e.address].join(", ")) : "";
+    const where = e.venue ? el("p", { class: "where" }, e.venue, e.address ? el("a", { class: "addr", href: mapUrl, target: "_blank", rel: "noopener", style: "display:block;margin-top:4px" }, e.address) : null) : e.tbd ? el("p", { class: "where tbd" }, "Venue to be announced") : el("p", { class: "where" }, VENUE.venue);
     const links = el("div", { class: "links" });
     { const a = el("a", { class: "btn", href: calUrl(e, day), target: "_blank", rel: "noopener" }); a.append(svgUse("i-cal"), "Add to calendar"); links.append(a); }
     if (e.address) { const a = el("a", { class: "btn", href: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([e.venue, e.address].join(", ")), target: "_blank", rel: "noopener" }); a.append(svgUse("i-pin"), "Directions"); links.append(a); }
@@ -1217,7 +1222,7 @@ function makeDhol() {
     const a = h("a", "btn"); a.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.name + ", " + p.addr); a.target = "_blank"; a.rel = "noopener"; a.append(svgUse("i-pin"), "Directions");
     const chips = h("div", "chips");
     for (const q of P) { const b = h("button", null, q.chip); b.type = "button"; b.setAttribute("aria-pressed", q.id === id); b.addEventListener("click", () => show(q.id)); chips.append(b); }
-    spot.append(...[h("span", "tag", p.tag), h("h3", null, p.name || "Suggested hotel"), p.addr && h("p", "addr", p.addr), h("p", "note", p.note), p.drive && drive, p.addr && a, chips].filter(Boolean));
+    spot.append(...[h("span", "tag", p.tag), h("h3", null, p.name || "Suggested hotel"), p.addr && (() => { const ad = h("a", "addr", p.addr); ad.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.name + ", " + p.addr); ad.target = "_blank"; ad.rel = "noopener"; return ad; })(), h("p", "note", p.note), p.drive && drive, p.addr && a, chips].filter(Boolean));
   }
   show("venue");
 })();
