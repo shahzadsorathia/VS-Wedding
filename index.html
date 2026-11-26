@@ -715,6 +715,11 @@ footer small sup.th { letter-spacing: 0; margin-left: -.5em; margin-right: .35em
 /* small gold lettering uses the deeper gold so it reads clearly (decorative gold stays as is) */
 .eyebrow, .ch-text .num, .stage .caption .num, .spot .tag, .gate-greet .inv, .seal .cta, .tassel-hint, .hero-text .names .sur { color: var(--gold-text); }
 .wine .eyebrow { color: var(--gold-soft); }
+/* header: bigger invisible tap areas (about 44 px tall) without changing how it looks */
+.nav ul a { padding: 14px 4px; margin: -14px -4px; }
+.nav a[href="#top"], .nav-ctl button { position: relative; }
+.nav a[href="#top"]::after { content: ""; position: absolute; inset: -6px; }
+.nav-ctl button::after { content: ""; position: absolute; inset: -7px -2px; border-radius: 12px; }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
